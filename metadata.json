@@ -1,0 +1,6 @@
+{
+  "name": "Comfyscape — Premium Mattress Catalogue",
+  "description": "Explore the Comfyscape mattress catalogue: premium handcrafted mattresses for better sleep and better life. View specifications, sizes, and enquire directly on WhatsApp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
