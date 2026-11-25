@@ -18,18 +18,10 @@ export const BRAND_CONFIG = {
     phoneFormatted: '+91 93100 08171',
     phoneTelLink: 'tel:+919310008171',
     email: 'enquiry@comfyscape.com',
-    address: {
-      line1: 'Comfyscape Studio & Experience Lounge',
-      line2: '450 Artisan Bedding Boulevard, Suite 12',
-      city: 'Comfort District',
-      statePostal: 'CA 90210',
-      country: 'United States',
-    },
-    businessHours: {
-      weekdays: 'Monday – Friday: 9:00 AM – 7:00 PM',
-      saturday: 'Saturday: 10:00 AM – 6:00 PM',
-      sunday: 'Sunday: 11:00 AM – 4:00 PM',
-    },
+    address:
+      'Opposite Mahakal Mandir, Bhora Kalan, Nurpur Bahora, Haryana 122413, India.',
+    mapsUrl:
+      'https://www.google.com/maps/place/Comfy+Mattress/@28.3011525,76.8299622,17z/data=!3m1!4b1!4m6!3m5!1s0x390d395910ca4d71:0x8b8e84144566a52a!8m2!3d28.3011525!4d76.8299622!16s%2Fg%2F11sfb4rgb8',
   },
 
   // Default WhatsApp message templates

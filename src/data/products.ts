@@ -6,6 +6,8 @@ import {
   ProductImage,
   ProductItem,
 } from '../types/product';
+import allSeasonComforterImage from '../images/All-Season Microfiber Comforter.png';
+import reversibleComforterImage from '../images/Reversible Microfiber Comforter.png';
 import {
   DEFAULT_MATTRESS_DIMENSIONS,
   MATTRESS_CATEGORIES,
@@ -49,7 +51,20 @@ export const SLEEP_CATEGORIES = [
   },
 ];
 
-function createComforterImageSlots(productName: string): ProductImage[] {
+function createComforterImageSlots(
+  productName: string,
+  image?: string
+): ProductImage[] {
+  if (image) {
+    return [
+      {
+        src: image,
+        alt: `${productName} — primary view`,
+        label: 'Primary View',
+      },
+    ];
+  }
+
   return [
     {
       src: null,
@@ -77,7 +92,10 @@ export const COMFORTER_PRODUCTS: ProductItem[] = [
       'Lightweight all-season microfiber comforter with box-stitched quilting.',
     description:
       'Designed for year-round comfort in air-conditioned rooms and mild winters, with box quilting to help keep filling evenly distributed. Editable catalogue entry.',
-    images: createComforterImageSlots('All-Season Microfiber Comforter'),
+    images: createComforterImageSlots(
+      'All-Season Microfiber Comforter',
+      allSeasonComforterImage
+    ),
     materialType: 'Microfiber',
     material: 'Hollow Conjugated Microfiber Filling',
     firmness: 'Soft',
@@ -105,7 +123,10 @@ export const COMFORTER_PRODUCTS: ProductItem[] = [
       'Dual-tone reversible microfiber comforter crafted for everyday bedroom comfort.',
     description:
       'Flip between two complementary neutral shades with soft brushed microfiber fabric and lightweight polyfill insulation. Editable catalogue entry.',
-    images: createComforterImageSlots('Reversible Microfiber Comforter'),
+    images: createComforterImageSlots(
+      'Reversible Microfiber Comforter',
+      reversibleComforterImage
+    ),
     materialType: 'Microfiber',
     material: 'Siliconized Microfiber Fill',
     firmness: 'Soft',

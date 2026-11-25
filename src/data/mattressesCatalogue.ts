@@ -4,6 +4,39 @@ import {
   ProductImage,
   ProductItem,
 } from '../types/product';
+import diwanPrimary from '../images/diwan.png';
+import diwanDetail from '../images/diwan 2.png';
+import diwanRoom from '../images/diwan 3.png';
+import dualComfortPrimary from '../images/dual comfort.png';
+import dualComfortDetail from '../images/dual comfor 2.png';
+import fullLatexPrimary from '../images/full latex.png';
+import gridHybridPrimary from '../images/grd hybrid.png';
+import gridPrimary from '../images/grid.png';
+import gridConstruction from '../images/grid 2.png';
+import gridSurface from '../images/grid 3.png';
+import hrPrimary from '../images/hr.png';
+import hrConstruction from '../images/hr 2.png';
+import hrFoamDetail from '../images/hr 3.png';
+import latexHybridPrimary from '../images/latex-hybrid.png';
+import latexHybridDetail from '../images/latex hybrid 2.png';
+import latexPrimary from '../images/latex.png';
+import memoryFoamPrimary from '../images/memory foam 2.png';
+import memoryFoamDetail from '../images/memory foam.png';
+import orthopedicFoamPrimary from '../images/Orthopedic Foam Mattress.png';
+import orthopedicFoamProfile from '../images/Orthopedic Foam Mattress 2.png';
+import orthopedicFoamConstruction from '../images/Orthopedic Foam Mattress 3.png';
+import orthopedicMemoryFoamPrimary from '../images/Orthopedic Memory Foam.png';
+import orthopedicMemoryFoamProfile from '../images/Orthopedic Memory Foam 2.png';
+import orthopedicMemoryFoamConstruction from '../images/Orthopedic Memory Foam 3.png';
+import pocketSpringPrimary from '../images/Pocket Spring + Foam Comfort.jpeg';
+import pocketSpringDetail from '../images/Pocket Spring + Foam Comfort Top.png';
+import pocketSpringConstruction from '../images/Pocket Spring + Foam Comfort.png';
+import rebondedPrimary from '../images/rebonded.png';
+import rebondedConstruction from '../images/rebonded 2.png';
+import rebondedCore from '../images/rebonded 3.png';
+import trifoldPrimary from '../images/tri-fold.png';
+import trifoldDetail from '../images/tri fold 2.png';
+import trifoldCover from '../images/trifold 3.png';
 
 /**
  * Editable default mattress dimensions.
@@ -84,11 +117,21 @@ function createStandardSizeOptions(
 }
 
 /**
- * Helper to create clearly marked temporary placeholder image slots for each mattress.
- * Replace `src: null` with actual Comfyscape image paths (e.g. "/assets/mattresses/orthopedic-foam-1.jpg")
- * when product images are added.
+ * Creates gallery entries for available local images, or placeholder slots when
+ * product photography is not available yet.
  */
-function createMattressImageSlots(productName: string): ProductImage[] {
+function createMattressImageSlots(
+  productName: string,
+  images: { src: string; label: string }[] = []
+): ProductImage[] {
+  if (images.length > 0) {
+    return images.map(({ src, label }) => ({
+      src,
+      alt: `${productName} — ${label.toLowerCase()}`,
+      label,
+    }));
+  }
+
   return [
     {
       src: null,
@@ -116,7 +159,7 @@ function createMattressImageSlots(productName: string): ProductImage[] {
  * - All variant prices are intentionally left `null` ("Price on enquiry").
  * - `warranty` is left `null` until officially verified for each product.
  * - No ratings, review counts, discounts, or bestseller badges are hardcoded.
- * - Replace `images[i].src` with real local image paths once product photography is ready.
+ * - Matched photography is imported from `src/images`; unmatched products retain placeholders.
  */
 export const MATTRESS_PRODUCTS: ProductItem[] = [
   {
@@ -129,7 +172,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Firm, structured high-density foam mattress designed for consistent spinal support.',
     description:
       'Built around a high-density supportive foam core to maintain even body weight distribution and steady back alignment. Editable product entry ready for confirmed Comfyscape foam specifications and pricing.',
-    images: createMattressImageSlots('Orthopedic Foam Mattress'),
+    images: createMattressImageSlots('Orthopedic Foam Mattress', [
+      { src: orthopedicFoamPrimary, label: 'Primary View' },
+      { src: orthopedicFoamProfile, label: 'Side Profile' },
+      { src: orthopedicFoamConstruction, label: 'Construction Detail' },
+    ]),
     materialType: 'Foam',
     material: 'High-Density Orthopedic Support Foam',
     layers: [
@@ -168,7 +215,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Contouring memory foam top paired with a supportive orthopedic foam base.',
     description:
       'Combines a pressure-relieving memory foam comfort layer with a firm orthopedic support base to balance body contouring and spinal alignment. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Orthopedic Memory Foam Mattress'),
+    images: createMattressImageSlots('Orthopedic Memory Foam Mattress', [
+      { src: orthopedicMemoryFoamPrimary, label: 'Primary View' },
+      { src: orthopedicMemoryFoamProfile, label: 'Side Profile' },
+      { src: orthopedicMemoryFoamConstruction, label: 'Construction Detail' },
+    ]),
     materialType: 'Memory Foam',
     material: 'Visco-Elastic Memory Foam + Orthopedic Support Foam',
     layers: [
@@ -211,7 +262,10 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Body-contouring memory foam mattress offering plush cushioning and motion isolation.',
     description:
       'Designed with a generous visco-elastic memory foam comfort surface over a supportive foam base for gentle contouring and minimal motion transfer. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Memory Foam Mattress'),
+    images: createMattressImageSlots('Memory Foam Mattress', [
+      { src: memoryFoamPrimary, label: 'Primary View' },
+      { src: memoryFoamDetail, label: 'Construction Detail' },
+    ]),
     materialType: 'Memory Foam',
     material: 'Visco-Elastic Memory Foam + Foam Support Base',
     layers: [
@@ -250,7 +304,9 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Breathable latex comfort layer paired with a supportive high-density foam base.',
     description:
       'Features a buoyant pin-core latex top layer that responds quickly to movement while promoting airflow, supported by a durable foam foundation. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Latex Mattress'),
+    images: createMattressImageSlots('Latex Mattress', [
+      { src: latexPrimary, label: 'Construction Detail' },
+    ]),
     materialType: 'Latex',
     material: 'Latex Comfort Layer + High-Density Foam Core',
     layers: [
@@ -289,7 +345,9 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'All-latex mattress construction crafted for natural breathability and lasting resilience.',
     description:
       'Constructed entirely with layered latex cores for consistent buoyant support, open pin-core ventilation, and long-term elasticity. Editable product entry ready for confirmed latex specifications.',
-    images: createMattressImageSlots('Full Latex Mattress'),
+    images: createMattressImageSlots('Full Latex Mattress', [
+      { src: fullLatexPrimary, label: 'Primary View' },
+    ]),
     materialType: 'Latex',
     material: 'Multi-Layer Full Latex Core',
     layers: [
@@ -328,7 +386,10 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Responsive latex comfort layer combined with an individually pocketed spring base.',
     description:
       'Pairs the breathable resilience of a latex comfort layer with the adaptive lift and airflow of an independent pocket spring core. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Latex Hybrid Mattress'),
+    images: createMattressImageSlots('Latex Hybrid Mattress', [
+      { src: latexHybridPrimary, label: 'Primary View' },
+      { src: latexHybridDetail, label: 'Alternate View' },
+    ]),
     materialType: 'Hybrid',
     material: 'Latex Comfort Layer + Individually Wrapped Pocket Springs',
     layers: [
@@ -371,7 +432,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Individually encased pocket spring mattress with cushioned comfort quilting.',
     description:
       'Uses individually wrapped coils that compress independently to contour to body shape while minimizing partner disturbance compared to traditional linked springs. Editable product entry.',
-    images: createMattressImageSlots('Pocket Spring Mattress'),
+    images: createMattressImageSlots('Pocket Spring Mattress', [
+      { src: pocketSpringPrimary, label: 'Primary View' },
+      { src: pocketSpringDetail, label: 'Surface Detail' },
+      { src: pocketSpringConstruction, label: 'Spring Construction' },
+    ]),
     materialType: 'Pocket Spring',
     material: 'Individually Wrapped Pocket Springs + Foam Comfort Top',
     layers: [
@@ -405,49 +470,6 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
     isPlaceholderEntry: true,
   },
   {
-    id: 'hybrid-mattress',
-    slug: 'hybrid-mattress',
-    name: 'Hybrid Mattress',
-    category: 'bed',
-    mattressCategories: ['Spring & Hybrid Mattresses'],
-    shortDescription:
-      'Multi-layer foam comfort combined with a supportive pocket spring foundation.',
-    description:
-      'Blends contouring foam comfort layers on top with the responsive lift and ventilation of pocket springs underneath. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Hybrid Mattress'),
-    materialType: 'Hybrid',
-    material: 'Comfort Foam Layers + Pocket Spring Foundation',
-    layers: [
-      {
-        name: 'Comfort Foam Top Layer',
-        description: 'Soft contouring foam layer for pressure relief.',
-      },
-      {
-        name: 'Support Transition Layer',
-        description: 'Balances body weight before engaging the spring core.',
-      },
-      {
-        name: 'Pocket Spring Support Core',
-        description: 'Breathable coil unit for responsive lift and support.',
-      },
-    ],
-    firmness: 'Medium Firm',
-    thicknessOptions: [8, 10, 12],
-    sizeOptions: createStandardSizeOptions([8, 10, 12]),
-    features: [
-      'Multi-layer foam and spring construction',
-      'Balanced contouring and responsive lift',
-      'Airflow-friendly coil base',
-    ],
-    coverInfo: 'Breathable quilted knit cover (editable placeholder)',
-    warranty: null,
-    additionalSpecs: [
-      { label: 'Core Construction', value: 'Foam + Pocket Spring Hybrid' },
-      { label: 'Custom Sizing', value: 'Available on enquiry' },
-    ],
-    isPlaceholderEntry: true,
-  },
-  {
     id: 'grid-mattress',
     slug: 'grid-mattress',
     name: 'Grid Mattress',
@@ -457,7 +479,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Flexible polymer grid surface engineered for open airflow and adaptive pressure relief.',
     description:
       'Built with an open-channel elastic polymer grid top layer over a supportive foam base to flex under pressure points while allowing continuous air circulation. Editable product entry.',
-    images: createMattressImageSlots('Grid Mattress'),
+    images: createMattressImageSlots('Grid Mattress', [
+      { src: gridPrimary, label: 'Primary View' },
+      { src: gridConstruction, label: 'Construction Detail' },
+      { src: gridSurface, label: 'Surface Detail' },
+    ]),
     materialType: 'Polymer Grid',
     material: 'Hyper-Elastic Polymer Grid + Support Foam Base',
     layers: [
@@ -496,7 +522,9 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Polymer grid comfort layer paired with a supportive pocket spring base.',
     description:
       'Combines an open-airflow elastic grid top with an independent pocket spring foundation for cooling breathability, pressure relief, and responsive support. Editable product entry.',
-    images: createMattressImageSlots('Grid Hybrid Mattress'),
+    images: createMattressImageSlots('Grid Hybrid Mattress', [
+      { src: gridHybridPrimary, label: 'Primary View' },
+    ]),
     materialType: 'Hybrid',
     material: 'Polymer Grid + Pocket Spring Core',
     layers: [
@@ -539,7 +567,10 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Reversible dual-sided foam mattress with a softer side and a firmer side.',
     description:
       'Designed to be flipped according to your comfort preference: one side offers a gentler medium-soft feel while the reverse provides firmer support. Editable product entry.',
-    images: createMattressImageSlots('Dual Comfort Mattress'),
+    images: createMattressImageSlots('Dual Comfort Mattress', [
+      { src: dualComfortPrimary, label: 'Primary View' },
+      { src: dualComfortDetail, label: 'Comfort Sides' },
+    ]),
     materialType: 'Foam',
     material: 'Dual-Density Reversible Foam Core',
     layers: [
@@ -578,7 +609,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'High-density compressed rebonded foam mattress for firm, stable back support.',
     description:
       'Engineered around a dense compressed rebonded foam core that delivers an even, firm surface with strong resistance to sinking. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Rebonded Mattress'),
+    images: createMattressImageSlots('Rebonded Mattress', [
+      { src: rebondedPrimary, label: 'Primary View' },
+      { src: rebondedConstruction, label: 'Construction Detail' },
+      { src: rebondedCore, label: 'Core Detail' },
+    ]),
     materialType: 'Rebonded Foam',
     material: 'High-Density Compressed Rebonded Foam Core',
     layers: [
@@ -617,7 +652,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'High-resilience open-cell foam mattress delivering buoyant, everyday comfort.',
     description:
       'Crafted with open-cell High-Resilience (HR) foam that springs back quickly for effortless turning and consistent support across the entire sleep surface. Editable product entry.',
-    images: createMattressImageSlots('HR Foam Mattress'),
+    images: createMattressImageSlots('HR Foam Mattress', [
+      { src: hrPrimary, label: 'Primary View' },
+      { src: hrConstruction, label: 'Construction Detail' },
+      { src: hrFoamDetail, label: 'Foam Detail' },
+    ]),
     materialType: 'HR Foam',
     material: 'High-Resilience (HR) Open-Cell Foam',
     layers: [
@@ -656,7 +695,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Three-fold portable foam mattress for guest sleeping, travel, and easy storage.',
     description:
       'A practical three-panel folding foam mattress that unfolds quickly for guests or floor sleeping and folds away neatly when not in use. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Trifold Mattress'),
+    images: createMattressImageSlots('Trifold Mattress', [
+      { src: trifoldPrimary, label: 'Primary View' },
+      { src: trifoldDetail, label: 'Folded View' },
+      { src: trifoldCover, label: 'Cover Detail' },
+    ]),
     materialType: 'Foam',
     material: 'Supportive Polyurethane Foam (3-Panel Fold)',
     firmness: 'Medium Firm',
@@ -698,7 +741,11 @@ export const MATTRESS_PRODUCTS: ProductItem[] = [
       'Firm foam mattress tailored for living room diwans, daybeds, and seating cots.',
     description:
       'Built with structured firm foam to hold its shape for both daytime sitting and overnight sleeping on standard or custom diwan frames. Editable product entry ready for confirmed specifications.',
-    images: createMattressImageSlots('Diwan Mattress'),
+    images: createMattressImageSlots('Diwan Mattress', [
+      { src: diwanPrimary, label: 'Primary View' },
+      { src: diwanDetail, label: 'Construction Detail' },
+      { src: diwanRoom, label: 'Room View' },
+    ]),
     materialType: 'Foam',
     material: 'High-Density Structured Foam',
     firmness: 'Firm',

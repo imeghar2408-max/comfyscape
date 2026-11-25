@@ -3,7 +3,6 @@ import {
   Phone, 
   Mail, 
   MapPin, 
-  Clock, 
   MessageSquare, 
   Send, 
   CheckCircle2, 
@@ -179,30 +178,42 @@ export const ContactPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Card 4: Studio Location */}
+          {/* Card 4: Factory Location */}
           <div className="bg-white p-6 rounded-2xl border border-[#EAE3D8] flex flex-col justify-between space-y-4">
             <div>
               <div className="w-10 h-10 rounded-full bg-[#FAF8F5] flex items-center justify-center text-[#8C7456] mb-3">
                 <MapPin className="w-5 h-5" />
               </div>
               <span className="text-[10px] uppercase font-bold tracking-wider text-[#8C7456] block">
-                Experience Studio
+                Manufacturing Facility
               </span>
               <h3 className="font-serif text-lg font-bold text-[#1F1C18] mt-1">
-                Showroom
+                Factory
               </h3>
-              <p className="text-xs text-[#7A7369] mt-1 leading-relaxed">
-                {BRAND_CONFIG.contact.address.line1}, {BRAND_CONFIG.contact.address.city}
-              </p>
+              <a
+                href={BRAND_CONFIG.contact.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-xs text-[#7A7369] mt-1 leading-relaxed hover:text-[#1F1C18] transition-colors"
+              >
+                {BRAND_CONFIG.contact.address}
+              </a>
             </div>
-            <div className="text-[11px] text-[#7A7369]">
-              <span>{BRAND_CONFIG.contact.businessHours.weekdays}</span>
+            <div>
+              <a
+                href={BRAND_CONFIG.contact.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-center text-xs font-semibold py-2 px-3 border border-[#D5C6B3] hover:border-[#1F1C18] rounded-full text-[#1F1C18] transition-colors"
+              >
+                Get Directions
+              </a>
             </div>
           </div>
 
         </div>
 
-        {/* Form and Hours Side by Side */}
+        {/* Enquiry and Factory Location Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
           
           {/* Enquiry Form (Frontend UI) */}
@@ -396,48 +407,25 @@ export const ContactPage: React.FC = () => {
 
           </div>
 
-          {/* Right Info: Working Hours & Studio Details */}
+          {/* Factory Location */}
           <div className="lg:col-span-5 space-y-6">
-            
-            {/* Working Hours */}
-            <div className="bg-white p-7 rounded-2xl border border-[#EAE3D8] space-y-4">
-              <div className="flex items-center gap-2 text-[#8C7456]">
-                <Clock className="w-5 h-5" />
-                <h3 className="font-serif text-lg font-bold text-[#1F1C18]">Consultation Hours</h3>
-              </div>
-              <ul className="text-xs sm:text-sm text-[#575047] space-y-2.5 divide-y divide-[#F2ECE3]">
-                <li className="flex justify-between pt-2">
-                  <span>Monday – Friday</span>
-                  <span className="font-semibold text-[#1F1C18]">9:00 AM – 7:00 PM</span>
-                </li>
-                <li className="flex justify-between pt-2">
-                  <span>Saturday</span>
-                  <span className="font-semibold text-[#1F1C18]">10:00 AM – 6:00 PM</span>
-                </li>
-                <li className="flex justify-between pt-2">
-                  <span>Sunday</span>
-                  <span className="font-semibold text-[#1F1C18]">11:00 AM – 4:00 PM</span>
-                </li>
-              </ul>
-              <p className="text-[11px] text-[#7A7369] pt-2">
-                WhatsApp inquiries sent outside business hours are answered early the following morning.
-              </p>
-            </div>
-
-            {/* Visit Studio */}
+            {/* Factory Details */}
             <div className="bg-[#F4EFEA] p-7 rounded-2xl border border-[#EAE3D8] space-y-3">
               <div className="flex items-center gap-2 text-[#8C7456]">
                 <MapPin className="w-5 h-5" />
-                <h3 className="font-serif text-lg font-bold text-[#1F1C18]">Experience Lounge</h3>
+                <h3 className="font-serif text-lg font-bold text-[#1F1C18]">Factory Location</h3>
               </div>
               <p className="text-xs sm:text-sm text-[#575047] leading-relaxed">
-                Want to test foam firmness in person? Visit our lounge to feel our multi-layer cutouts and talk with mattress artisans.
+                Comfyscape's mattress manufacturing facility.
               </p>
-              <div className="text-xs text-[#1F1C18] font-medium pt-1">
-                <p>{BRAND_CONFIG.contact.address.line1}</p>
-                <p>{BRAND_CONFIG.contact.address.line2}</p>
-                <p>{BRAND_CONFIG.contact.address.city}, {BRAND_CONFIG.contact.address.statePostal}</p>
-              </div>
+              <a
+                href={BRAND_CONFIG.contact.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-xs text-[#1F1C18] font-medium pt-1 hover:underline"
+              >
+                {BRAND_CONFIG.contact.address}
+              </a>
             </div>
 
           </div>

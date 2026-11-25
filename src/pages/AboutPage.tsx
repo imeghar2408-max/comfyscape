@@ -52,7 +52,7 @@ export const AboutPage: React.FC = () => {
             </h2>
             <div className="space-y-4 text-sm sm:text-base text-[#575047] leading-relaxed">
               <p>
-                For decades, the mattress industry has masked simple materials behind complex jargon, astronomical showroom markups, and arbitrary labels. Customers often found themselves buying mattresses that began sagging after a few short months.
+                For decades, the mattress industry has masked simple materials behind complex jargon, astronomical retail markups, and arbitrary labels. Customers often found themselves buying mattresses that began sagging after a few short months.
               </p>
               <p>
                 <strong>Comfyscape</strong> was founded to provide an honest alternative. We build and supply mattresses directly to homeowners, hospitality projects, and architects. We clearly disclose our foam densities—whether it is 32D high-resilience foam, 85D orthopedic rebonded cores, or natural sterilized rubberized coconut coir.

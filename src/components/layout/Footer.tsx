@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, Clock, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react';
 import { BRAND_CONFIG } from '../../config/contact';
 import { WhatsAppButton } from '../common/WhatsAppButton';
 import { BrandLogo } from '../common/BrandLogo';
@@ -113,9 +113,14 @@ export const Footer: React.FC = () => {
             <ul className="space-y-3 text-xs text-[#BDB2A3]">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#C8B8A6] shrink-0 mt-0.5" />
-                <span>
-                  {BRAND_CONFIG.contact.address.line1}, {BRAND_CONFIG.contact.address.line2}, {BRAND_CONFIG.contact.address.city}
-                </span>
+                <a
+                  href={BRAND_CONFIG.contact.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  {BRAND_CONFIG.contact.address}
+                </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#C8B8A6] shrink-0" />
@@ -128,13 +133,6 @@ export const Footer: React.FC = () => {
                 <a href={`mailto:${BRAND_CONFIG.contact.email}`} className="hover:text-white transition-colors">
                   {BRAND_CONFIG.contact.email}
                 </a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-[#C8B8A6] shrink-0 mt-0.5" />
-                <div>
-                  <p>{BRAND_CONFIG.contact.businessHours.weekdays}</p>
-                  <p>{BRAND_CONFIG.contact.businessHours.saturday}</p>
-                </div>
               </li>
             </ul>
           </div>

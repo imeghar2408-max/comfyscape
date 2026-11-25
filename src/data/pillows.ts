@@ -1,4 +1,12 @@
 import { ProductItem, PillowCategoryName, ProductImage } from '../types/product';
+import memoryFoamPillowImage from '../images/pillow- mem.png';
+import contourPillowImage from '../images/Contour Pillow.png';
+import latexPillowImage from '../images/latex pillow.png';
+import fiberPillowImage from '../images/Fiber Pillow.png';
+import microfiberPillowImage from '../images/Microfiber Pillow.png';
+import microfiberPillowDetail from '../images/microfiber pillow 2.png';
+import coolingPillowImage from '../images/cooling pillow.png';
+import coolingPillowDetail from '../images/cooling pillow 2.png';
 
 /**
  * Supported pillow categories for the Comfyscape Pillow Catalogue.
@@ -14,11 +22,28 @@ export const PILLOW_CATEGORIES: readonly PillowCategoryName[] = [
 ];
 
 /**
- * Helper to create clearly labeled temporary placeholder image slots for pillows.
- * Replace `src: null` with actual Comfyscape image paths (e.g. "/assets/pillows/memory-foam-1.jpg")
- * when product photography is ready.
+ * Creates a local image entry when photography is available, otherwise placeholder slots.
  */
-function createPillowImageSlots(productName: string): ProductImage[] {
+function createPillowImageSlots(
+  productName: string,
+  image?: string,
+  additionalImages: { src: string; label: string }[] = []
+): ProductImage[] {
+  if (image) {
+    return [
+      {
+        src: image,
+        alt: `${productName} — primary view`,
+        label: 'Primary View',
+      },
+      ...additionalImages.map(({ src, label }) => ({
+        src,
+        alt: `${productName} — ${label.toLowerCase()}`,
+        label,
+      })),
+    ];
+  }
+
   return [
     {
       src: null,
@@ -45,7 +70,7 @@ function createPillowImageSlots(productName: string): ProductImage[] {
  * - Edit or remove any entry below to match actual stock.
  * - Replace `price: null` with numeric values (e.g. `1299`) once pricing is confirmed.
  *   Leaving `price: null` displays "Price on enquiry".
- * - Replace `images[i].src` with actual image file paths under `/public/assets/...`.
+ * - Import confirmed local product images from `src/images`.
  * - Only populate `warranty` once officially confirmed.
  */
 export const PILLOW_PRODUCTS: ProductItem[] = [
@@ -59,7 +84,7 @@ export const PILLOW_PRODUCTS: ProductItem[] = [
       'Supportive memory foam pillow shaped for steady head and neck cushioning.',
     description:
       'A classic memory foam sleeping pillow that gently adapts to the shape of the head and neck. Specifications and dimensions below can be customized to match final Comfyscape inventory.',
-    images: createPillowImageSlots('Memory Foam Pillow'),
+    images: createPillowImageSlots('Memory Foam Pillow', memoryFoamPillowImage),
     materialType: 'Memory Foam',
     material: 'Molded Visco-Elastic Memory Foam',
     firmness: 'Medium Firm',
@@ -88,7 +113,7 @@ export const PILLOW_PRODUCTS: ProductItem[] = [
       'Dual-height contoured memory foam pillow shaped for cervical neck support.',
     description:
       'Designed with an ergonomic dual-height wave profile to cradle the natural curve of the neck for back and side sleepers. Editable catalogue entry ready for confirmed product specifications.',
-    images: createPillowImageSlots('Contour Pillow'),
+    images: createPillowImageSlots('Contour Pillow', contourPillowImage),
     materialType: 'Memory Foam',
     material: 'Contoured Memory Foam Core',
     firmness: 'Medium Firm',
@@ -117,7 +142,7 @@ export const PILLOW_PRODUCTS: ProductItem[] = [
       'Naturally resilient pin-core latex pillow offering breathable, buoyant support.',
     description:
       'A responsive latex pillow with pin-core aeration holes for airflow and consistent bounce without flattening. Editable catalogue entry ready for confirmed product specifications.',
-    images: createPillowImageSlots('Latex Pillow'),
+    images: createPillowImageSlots('Latex Pillow', latexPillowImage),
     materialType: 'Latex',
     material: 'Pin-Core Latex Foam',
     firmness: 'Medium Firm',
@@ -146,7 +171,9 @@ export const PILLOW_PRODUCTS: ProductItem[] = [
       'Plush, lightweight microfiber-filled pillow with a soft, cloud-like feel.',
     description:
       'Filled with fine, soft microfiber clusters for gentle cushioning suited to sleepers who prefer a plush, cozy loft. Editable catalogue entry ready for confirmed product specifications.',
-    images: createPillowImageSlots('Microfiber Pillow'),
+    images: createPillowImageSlots('Microfiber Pillow', microfiberPillowImage, [
+      { src: microfiberPillowDetail, label: 'Fill Detail' },
+    ]),
     materialType: 'Microfiber',
     material: 'Fine Conjugated Microfiber Filling',
     firmness: 'Soft',
@@ -175,7 +202,7 @@ export const PILLOW_PRODUCTS: ProductItem[] = [
       'Everyday hollow-fiber sleeping pillow with easy maintenance and balanced loft.',
     description:
       'A practical, lightweight fiber pillow designed for regular daily use across bedrooms and guest rooms. Editable catalogue entry ready for confirmed product specifications.',
-    images: createPillowImageSlots('Fiber Pillow'),
+    images: createPillowImageSlots('Fiber Pillow', fiberPillowImage),
     materialType: 'Fiber',
     material: 'Hollow Siliconized Fiber Filling',
     firmness: 'Medium Soft',
@@ -203,7 +230,9 @@ export const PILLOW_PRODUCTS: ProductItem[] = [
       'Ventilated gel-infused memory foam pillow designed for a cooler sleep surface.',
     description:
       'Combines contouring memory foam with cooling gel infusion and a breathable outer cover to help reduce heat buildup during sleep. Editable catalogue entry ready for confirmed product specifications.',
-    images: createPillowImageSlots('Cooling Pillow'),
+    images: createPillowImageSlots('Cooling Pillow', coolingPillowImage, [
+      { src: coolingPillowDetail, label: 'Cooling Detail' },
+    ]),
     materialType: 'Memory Foam',
     material: 'Gel-Infused Memory Foam',
     firmness: 'Medium Soft',
