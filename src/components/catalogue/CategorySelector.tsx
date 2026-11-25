@@ -1,7 +1,12 @@
 import React from 'react';
-import { SLEEP_CATEGORIES } from '../../data/products';
+import { ArrowRight, BedDouble, Cloud, Layers } from 'lucide-react';
+import {
+  COMFORTER_PRODUCTS,
+  MATTRESS_PRODUCTS,
+  PILLOW_PRODUCTS,
+  SLEEP_CATEGORIES,
+} from '../../data/products';
 import { ProductCategory } from '../../types/product';
-import { ArrowRight, Bed, Cloud, Layers } from 'lucide-react';
 
 interface CategorySelectorProps {
   activeCategory: ProductCategory;
@@ -14,29 +19,34 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   onSelectCategory,
   onViewAllClick,
 }) => {
-  // Category specific icon helper
-  const renderCategoryIcon = (id: ProductCategory) => {
+  const categoryCounts: Record<ProductCategory, number> = {
+    bed: MATTRESS_PRODUCTS.length,
+    pillow: PILLOW_PRODUCTS.length,
+    comforter: COMFORTER_PRODUCTS.length,
+  };
+
+  const renderCategoryIcon = (id: ProductCategory, isActive: boolean) => {
+    const colorClass = isActive ? 'text-[#0B2F57]' : 'text-[#8C7456] group-hover:text-[#0B2F57]';
     switch (id) {
       case 'bed':
-        return <Bed className="w-8 h-8 text-[#0B2F57]" />;
+        return <BedDouble className={`w-6 h-6 transition-colors ${colorClass}`} strokeWidth={1.6} />;
       case 'pillow':
-        return <Cloud className="w-8 h-8 text-[#0B2F57]" />;
+        return <Cloud className={`w-6 h-6 transition-colors ${colorClass}`} strokeWidth={1.6} />;
       case 'comforter':
-        return <Layers className="w-8 h-8 text-[#0B2F57]" />;
+        return <Layers className={`w-6 h-6 transition-colors ${colorClass}`} strokeWidth={1.6} />;
     }
   };
 
   return (
-    <div className="mb-10">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-3">
+    <div className="mb-8">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-5 gap-3">
         <div>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#E85D04] mb-1">
-            <span className="w-4 h-[2px] bg-[#E85D04]" />
-            <span>SLEEP ESSENTIALS</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#0B2F57] tracking-tight">
-            Discover Sleep Categories
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#8C7456] block mb-1">
+            Sleep Essentials
+          </span>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1F1C18] tracking-tight">
+            Browse by Category
           </h2>
         </div>
 
@@ -44,17 +54,24 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
           <button
             type="button"
             onClick={onViewAllClick}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0066B2] hover:text-[#004B80] uppercase tracking-wider transition-colors group self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0B2F57] hover:text-[#133F72] uppercase tracking-wider transition-colors group self-start sm:self-auto"
           >
-            <span>ALL {activeCategory === 'bed' ? 'MATTRESSES' : activeCategory === 'pillow' ? 'PILLOWS' : 'COMFORTERS'}</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            <span>
+              All{' '}
+              {activeCategory === 'bed'
+                ? 'Mattresses'
+                : activeCategory === 'pillow'
+                  ? 'Pillows'
+                  : 'Comforters'}
+            </span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
         )}
       </div>
 
-      {/* 3 Categories Grid (Beds/Mattresses, Pillows, Comforters) */}
-      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-        {SLEEP_CATEGORIES.map((cat) => {
+      {/* 3 Core Categories Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        {SLEEP_CATEGORIES.filter((cat) => categoryCounts[cat.id] > 0).map((cat) => {
           const isActive = activeCategory === cat.id;
 
           return (
@@ -62,29 +79,37 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
               key={cat.id}
               type="button"
               onClick={() => onSelectCategory(cat.id)}
-              className={`group relative flex flex-col items-center justify-between p-3.5 sm:p-4 rounded-xl text-center transition-all duration-200 bg-white border ${
+              className={`group flex items-center gap-4 p-4 rounded-xl text-left transition-all duration-200 bg-white border ${
                 isActive
-                  ? 'border-[#E85D04] shadow-md ring-2 ring-[#E85D04]/20'
-                  : 'border-slate-200 hover:border-slate-300 hover:shadow-xs'
+                  ? 'border-[#0B2F57] ring-1 ring-[#0B2F57] shadow-sm'
+                  : 'border-[#E6DFD4] hover:border-[#C8B8A6] hover:shadow-xs'
               }`}
             >
-              {/* Product preview / icon area */}
-              <div className="w-16 h-12 sm:w-20 sm:h-14 mb-2 rounded-lg bg-slate-50 flex items-center justify-center overflow-hidden p-1">
-                <img
-                  src={cat.image}
-                  alt={cat.shortName}
-                  className="w-full h-full object-cover rounded-md group-hover:scale-105 transition-transform"
-                />
-              </div>
-
-              {/* Title */}
-              <span
-                className={`text-xs sm:text-sm font-bold tracking-tight transition-colors ${
-                  isActive ? 'text-[#E85D04]' : 'text-slate-700 group-hover:text-[#0B2F57]'
+              <div
+                className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                  isActive ? 'bg-[#0B2F57]/10' : 'bg-[#F4EFEA]'
                 }`}
               >
-                {cat.shortName}
-              </span>
+                {renderCategoryIcon(cat.id, isActive)}
+              </div>
+
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`font-serif text-base font-bold transition-colors ${
+                      isActive ? 'text-[#0B2F57]' : 'text-[#1F1C18]'
+                    }`}
+                  >
+                    {cat.shortName}
+                  </span>
+                  <span className="text-xs text-[#7A7369]">
+                    ({categoryCounts[cat.id]})
+                  </span>
+                </div>
+                <p className="text-xs text-[#6B6359] line-clamp-1 mt-0.5">
+                  {cat.description}
+                </p>
+              </div>
             </button>
           );
         })}

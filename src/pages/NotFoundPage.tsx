@@ -2,12 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Home, Layers } from 'lucide-react';
 import { WhatsAppButton } from '../components/common/WhatsAppButton';
+import { BrandLogo } from '../components/common/BrandLogo';
 
 export const NotFoundPage: React.FC = () => {
   return (
     <div className="min-h-[70vh] flex items-center justify-center bg-[#FAF8F5] px-4 py-16">
       <div className="text-center max-w-md space-y-5">
-        <span className="text-xs uppercase tracking-[0.25em] text-[#8C7456] font-semibold">
+        <div className="flex justify-center">
+          <BrandLogo size="md" variant="light" />
+        </div>
+        <span className="block text-xs uppercase tracking-[0.25em] text-[#8C7456] font-semibold">
           Error 404
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#1F1C18]">

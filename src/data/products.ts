@@ -1,503 +1,128 @@
-import { ProductItem, ProductCategory, SizePriceOption } from '../types/product';
-import { PILLOW_PRODUCTS, PILLOW_CATEGORIES } from './pillows';
+import {
+  MattressCategoryName,
+  MattressSizeOption,
+  PillowCategoryName,
+  ProductCategory,
+  ProductImage,
+  ProductItem,
+} from '../types/product';
+import {
+  DEFAULT_MATTRESS_DIMENSIONS,
+  MATTRESS_CATEGORIES,
+  MATTRESS_PRODUCTS,
+} from './mattressesCatalogue';
+import { PILLOW_CATEGORIES, PILLOW_PRODUCTS } from './pillows';
 
-export { PILLOW_PRODUCTS, PILLOW_CATEGORIES };
+export {
+  DEFAULT_MATTRESS_DIMENSIONS,
+  MATTRESS_CATEGORIES,
+  MATTRESS_PRODUCTS,
+  PILLOW_CATEGORIES,
+  PILLOW_PRODUCTS,
+};
 
 export const PRICE_ON_ENQUIRY_LABEL = 'Price on enquiry';
 
 /**
- * Standard Comfyscape mattress sizes and dimensions.
- * Update individual `price` values inside each mattress's `sizePricing` array
- * once actual prices are finalized. Leaving `price: null` displays "Price on enquiry".
+ * Top-level sleep categories for Comfyscape.
  */
-export const STANDARD_MATTRESS_DIMENSIONS = {
-  Single: '72 × 36 inches',
-  Double: '72 × 48 inches',
-  Queen: '78 × 60 inches',
-  King: '78 × 72 inches',
-} as const;
-
 export const SLEEP_CATEGORIES = [
   {
     id: 'bed' as ProductCategory,
-    name: 'Beds & Mattresses',
+    name: 'Mattresses',
     shortName: 'Mattresses',
-    image: 'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=400&q=80',
-    description: 'Precision ergonomic mattresses crafted for optimal spine alignment and pressure-free sleep.',
+    description:
+      'Orthopedic, foam, memory foam, latex, spring, hybrid, grid, dual comfort, foldable, diwan, and baby mattresses.',
   },
   {
     id: 'pillow' as ProductCategory,
     name: 'Pillows',
     shortName: 'Pillows',
-    image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=400&q=80',
-    description: 'Memory foam, latex, contour, microfiber, fiber, and cooling pillows for restorative neck support.',
+    description:
+      'Memory foam, contour, latex, microfiber, fiber, and cooling pillows.',
   },
   {
     id: 'comforter' as ProductCategory,
-    name: 'Luxury Comforters',
+    name: 'Comforters',
     shortName: 'Comforters',
-    image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=400&q=80',
-    description: 'All-season breathable microfiber comforters and reversible duvets.',
+    description: 'Breathable microfiber and reversible all-season comforters.',
   },
 ];
 
-export const BENEFIT_FILTERS = [
-  'All',
-  'Latex Mattress',
-  'Orthopedic Mattress',
-  'Spring Mattress',
-  'Enhanced Sleep Tech',
-  'Active Recovery',
-  'Value Comfort',
-];
-
-export const SERIES_FILTERS = [
-  'All',
-  'Royale',
-  'Pro Spinetech',
-  'Springfresh',
-  'Nexa Plus',
-  'FitRest Plus',
-  'Durafirm',
-  'Champ',
-  'Ortho Pro Latex',
-  'Ortho',
-  'Utsav Comfort',
-];
-
-/**
- * Helper to create a clean per-size pricing array for a mattress.
- * Pass actual prices per size when available; omitted sizes remain `null` ("Price on enquiry").
- */
-function createMattressSizePricing(prices?: Partial<Record<'Single' | 'Double' | 'Queen' | 'King', number | null>>): SizePriceOption[] {
+function createComforterImageSlots(productName: string): ProductImage[] {
   return [
-    { size: 'Single', dimensions: STANDARD_MATTRESS_DIMENSIONS.Single, price: prices?.Single ?? null },
-    { size: 'Double', dimensions: STANDARD_MATTRESS_DIMENSIONS.Double, price: prices?.Double ?? null },
-    { size: 'Queen', dimensions: STANDARD_MATTRESS_DIMENSIONS.Queen, price: prices?.Queen ?? null },
-    { size: 'King', dimensions: STANDARD_MATTRESS_DIMENSIONS.King, price: prices?.King ?? null },
+    {
+      src: null,
+      alt: `${productName} — primary view`,
+      label: 'Primary View',
+    },
+    {
+      src: null,
+      alt: `${productName} — folded detail`,
+      label: 'Folded Detail',
+    },
   ];
 }
 
 /**
- * Mattress products — each mattress stores its own individual per-size pricing in `sizePricing`.
- * Replace `null` with numeric prices (e.g. `Single: 8500, Double: 10500, ...`) when available.
+ * Comforter Catalogue Data (Editable Placeholder Entries).
  */
-export const MATTRESS_PRODUCTS: ProductItem[] = [
-  // 1. Ortho Pro Latex Mattress
-  {
-    id: 'ortho-pro-latex',
-    name: 'Ortho Pro Latex Mattress',
-    slug: 'ortho-pro-latex-mattress',
-    category: 'bed',
-    kicker: 'MEDIUM-FIRM FEEL · NATURAL LATEX',
-    series: 'Ortho Pro Latex',
-    benefit: 'Latex Mattress',
-    feel: 'Medium Firm',
-    look: 'Euro Top',
-    type: 'Latex',
-    thicknessOptions: [5, 6, 8, 10],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Healthy Breathability', iconName: 'breathable' },
-      { text: 'Sleep Cooler With Pure Natural Latex', iconName: 'latex' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1540518614846-7ede433c4ef4?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Crafted with natural latex foam, the Ortho Pro Latex mattress delivers responsive push-back support with climate-regulating pin-cores.',
-    density: 'Pin-Core Natural Latex + 35D High Resilience Base',
-    coverFabric: '350 GSM Organic Cotton Knitted Jacquard',
-    coreMaterial: 'Natural Rubber Latex Core',
-    isBestseller: true,
-  },
-
-  // 2. Durafirm Classic Mattress
-  {
-    id: 'durafirm-classic',
-    name: 'Durafirm Classic Mattress',
-    slug: 'durafirm-classic-mattress',
-    category: 'bed',
-    kicker: 'FIRM FEEL · ORTHOPEDIC SUPPORT',
-    series: 'Durafirm',
-    benefit: 'Orthopedic Mattress',
-    feel: 'Firm',
-    look: 'Tight Top',
-    type: 'Foam',
-    thicknessOptions: [4, 5, 6, 8],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Comfortable Top Feel', iconName: 'fabric' },
-      { text: 'Knitted Fabric with High Resilience', iconName: 'shield' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1582533561751-ef6f6ab93a2e?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Durable bonded orthopedic foundation designed to support straight posture and help reduce morning spinal stiffness.',
-    density: '85D High-Density Bonded Core',
-    coverFabric: 'Heavy Belgian Damask Quilted Cover',
-    coreMaterial: 'Thermo-bonded Virgin Orthopedic Foam',
-    isBestseller: true,
-  },
-
-  // 3. Dual Mattress
-  {
-    id: 'dual-mattress',
-    name: 'Dual Mattress',
-    slug: 'dual-mattress',
-    category: 'bed',
-    kicker: 'DUAL COMFORT · ORTHOPEDIC SUPPORT',
-    series: 'Ortho',
-    benefit: 'Enhanced Sleep Tech',
-    feel: 'Medium Soft',
-    look: 'Tight Top',
-    type: 'Foam',
-    thicknessOptions: [5, 6, 8],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'VPF Technology Core', iconName: 'vpf' },
-      { text: 'Pressure-Relieving Ergonomic Support', iconName: 'pressure' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Dual-comfort reversible design: firm on one side for spine support, medium soft on the other side for plush relaxation.',
-    density: '32D Resilient Soft / 75D Firm Dual Profile',
-    coverFabric: 'Breathable Honeycomb Air-Mesh Ticking',
-    coreMaterial: 'Variable Pressure Foaming (VPF) Core',
-    isBestseller: true,
-  },
-
-  // 4. Ortho Genius Grid Mattress
-  {
-    id: 'ortho-genius-grid',
-    name: 'Ortho Genius Grid Mattress',
-    slug: 'ortho-genius-grid-mattress',
-    category: 'bed',
-    kicker: 'MEDIUM FIRM · GENIUS GRID TECH',
-    series: 'Nexa Plus',
-    benefit: 'Enhanced Sleep Tech',
-    feel: 'Medium Firm',
-    look: 'Euro Top',
-    type: 'Hybrid',
-    thicknessOptions: [6, 8, 10, 12],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Breathable Smart Grid Surface', iconName: 'antiMite' },
-      { text: 'Balanced Pressure Relief', iconName: 'pressure' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1617325247661-675ab4b64ae2?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Hyper-elastic gel grid adapts dynamically to your posture while promoting open airflow for cooler sleep.',
-    density: 'Smart Gel Grid + 40D Ortho Foam Base',
-    coverFabric: 'Cool-Touch Tencel Jacquard Quilting',
-    coreMaterial: 'Hyper-Elastic Polymer Smart Grid',
-    isBestseller: false,
-  },
-
-  // 5. Pro Spinetech Classic Mattress
-  {
-    id: 'pro-spinetech-classic',
-    name: 'Pro Spinetech Classic Mattress',
-    slug: 'pro-spinetech-classic-mattress',
-    category: 'bed',
-    kicker: 'MEDIUM-FIRM FEEL · ACTIVE RECOVERY',
-    series: 'Pro Spinetech',
-    benefit: 'Active Recovery',
-    feel: 'Medium Firm',
-    look: 'Euro Top',
-    type: 'Latex',
-    thicknessOptions: [5, 6, 8, 10],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Comfortable Knitted Fabric', iconName: 'fabric' },
-      { text: 'Pure Natural Latex Comfort Layer', iconName: 'latex' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Spine-supporting mattress combining natural latex resilience with a dense orthopedic core for restorative sleep.',
-    density: 'Natural Rubber Latex + 80D Ortho Bonded Core',
-    coverFabric: 'Antimicrobial Damask Fabric',
-    coreMaterial: 'Spinal Alignment Latex & Ortho Core',
-    isBestseller: true,
-  },
-
-  // 6. Ortho Mattress
-  {
-    id: 'ortho-mattress',
-    name: 'Ortho Mattress',
-    slug: 'ortho-mattress',
-    category: 'bed',
-    kicker: 'MEDIUM-FIRM · ORTHOPEDIC SUPPORT',
-    series: 'Ortho',
-    benefit: 'Orthopedic Mattress',
-    feel: 'Medium Firm',
-    look: 'Tight Top',
-    type: 'Foam',
-    thicknessOptions: [4, 5, 6, 8],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Improved Breathability Channels', iconName: 'breathable' },
-      { text: 'Breathable Sleep Airflow', iconName: 'airflow' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Direct orthopedic support with aerated channels for continuous airflow throughout the night.',
-    density: '32D High Resilience Open Cell Foam',
-    coverFabric: 'Breathable Microfiber Stretch Knit',
-    coreMaterial: 'Precision Contoured Ortho Foam Core',
-    isBestseller: false,
-  },
-
-  // 7. Royale Pocket Spring Mattress
-  {
-    id: 'royale-pocket-spring',
-    name: 'Royale Pocket Spring Mattress',
-    slug: 'royale-pocket-spring-mattress',
-    category: 'bed',
-    kicker: 'GENTLE FEEL · POCKET SPRING',
-    series: 'Royale',
-    benefit: 'Spring Mattress',
-    feel: 'Gentle',
-    look: 'Euro Top',
-    type: 'Spring',
-    thicknessOptions: [8, 10, 12],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Individually Encased Pocket Coils', iconName: 'pressure' },
-      { text: 'Reduced Partner Motion Transfer', iconName: 'shield' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Individually wrapped pocket springs paired with a plush euro-top layer for responsive cushioning and reduced motion transfer.',
-    density: 'Independent Pocket Coils + 35D Foam Encasement',
-    coverFabric: 'Soft Knitted Luxury Ticking',
-    coreMaterial: 'Independent Pocket Springs + High Loft Foam',
-    isBestseller: true,
-  },
-
-  // 8. Natural Coconut Coir Spine Mattress
-  {
-    id: 'natural-coir-spine',
-    name: 'Natural Coconut Coir Mattress',
-    slug: 'natural-coconut-coir-mattress',
-    category: 'bed',
-    kicker: 'BREATHABLE COIR · FIRM FEEL',
-    series: 'Springfresh',
-    benefit: 'Value Comfort',
-    feel: 'Firm',
-    look: 'Tight Top',
-    type: 'Coir',
-    thicknessOptions: [4, 5, 6],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Natural Rubberized Coir Mesh', iconName: 'breathable' },
-      { text: 'Natural Airflow & Ventilation', iconName: 'airflow' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Made from rubberized coconut coir fibers offering natural ventilation, springiness, and firm back support.',
-    density: 'High-Density Coir Core + 28D Cushion Layer',
-    coverFabric: 'Natural Bamboo Viscose Knitted Cover',
-    coreMaterial: 'Rubberized Coir Fiber',
-    isBestseller: false,
-  },
-
-  // 9. Memory Cloud Rest Mattress
-  {
-    id: 'memory-cloud-ortho',
-    name: 'Memory Cloud Rest Mattress',
-    slug: 'memory-cloud-rest-mattress',
-    category: 'bed',
-    kicker: 'CLOUD CONTOURING · MEDIUM-SOFT FEEL',
-    series: 'FitRest Plus',
-    benefit: 'Active Recovery',
-    feel: 'Medium Soft',
-    look: 'Euro Top',
-    type: 'Memory',
-    thicknessOptions: [6, 8, 10],
-    availableSizes: ['Single', 'Double', 'Queen', 'King', 'Custom Size'],
-    sizePricing: createMattressSizePricing({
-      Single: null,
-      Double: null,
-      Queen: null,
-      King: null,
-    }),
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Thermosensitive Memory Foam', iconName: 'pressure' },
-      { text: 'Gentle Shoulder & Hip Contouring', iconName: 'latex' },
-    ],
-    images: [
-      'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Contouring comfort engineered with temperature-sensitive memory foam that adapts smoothly to your sleeping posture.',
-    density: '60D Visco-Elastic Memory Foam over 35D Base',
-    coverFabric: 'Soft Breathable Microfiber Cover',
-    coreMaterial: 'Gel-Infused Visco-Elastic Memory Foam',
-    isBestseller: true,
-  },
-];
-
 export const COMFORTER_PRODUCTS: ProductItem[] = [
   {
-    id: 'all-season-comforter',
-    name: 'All-Season Microfiber Comforter',
+    id: 'all-season-microfiber-comforter',
     slug: 'all-season-microfiber-comforter',
+    name: 'All-Season Microfiber Comforter',
     category: 'comforter',
-    kicker: 'MICROFIBER FILL · ALL SEASON WARMTH',
-    series: 'Champ',
-    benefit: 'Value Comfort',
-    feel: 'Gentle',
-    look: 'Euro Top',
-    type: 'Microfiber',
-    materialFilling: '350 GSM Virgin Conjugated Microfiber',
+    shortDescription:
+      'Lightweight all-season microfiber comforter with box-stitched quilting.',
+    description:
+      'Designed for year-round comfort in air-conditioned rooms and mild winters, with box quilting to help keep filling evenly distributed. Editable catalogue entry.',
+    images: createComforterImageSlots('All-Season Microfiber Comforter'),
+    materialType: 'Microfiber',
+    material: 'Hollow Conjugated Microfiber Filling',
+    firmness: 'Soft',
     dimensions: 'Single (60 × 90 in) / King (90 × 100 in)',
-    availableSizes: ['Single', 'King'],
     variants: [
       { name: 'Single', dimensions: '60 × 90 inches', price: null },
       { name: 'King', dimensions: '90 × 100 inches', price: null },
     ],
     price: null,
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Soft 350 GSM Virgin Microfiber', iconName: 'fabric' },
-      { text: 'Box-Stitched Anti-Shift Filling', iconName: 'shield' },
+    features: [
+      'Lightweight all-season microfiber fill',
+      'Box-stitched anti-shift quilting',
+      'Soft brushed outer shell',
     ],
-    images: [
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1540518614846-7ede433c4ef4?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Lightweight all-season warmth suitable for AC rooms and mild winters, with box quilting to keep filling evenly distributed.',
-    density: '350 GSM Virgin Conjugated Microfiber',
-    coverFabric: 'Peach-Finished Microfiber Shell',
-    coreMaterial: 'Hypoallergenic Hollow Conjugate Fiber',
-    isBestseller: true,
+    coverInfo: 'Soft brushed microfiber shell (editable placeholder)',
+    warranty: null,
+    isPlaceholderEntry: true,
   },
   {
-    id: 'dualtone-reversible-comforter',
-    name: 'Dual-Tone Reversible Comforter',
-    slug: 'dualtone-reversible-comforter',
+    id: 'reversible-microfiber-comforter',
+    slug: 'reversible-microfiber-comforter',
+    name: 'Reversible Microfiber Comforter',
     category: 'comforter',
-    kicker: 'DUAL COLOR · SOFT BRUSHED FABRIC',
-    series: 'Utsav Comfort',
-    benefit: 'Value Comfort',
-    feel: 'Gentle',
-    look: 'Tight Top',
-    type: 'Microfiber',
-    materialFilling: '300 GSM Siliconized Virgin Polyfill',
+    shortDescription:
+      'Dual-tone reversible microfiber comforter crafted for everyday bedroom comfort.',
+    description:
+      'Flip between two complementary neutral shades with soft brushed microfiber fabric and lightweight polyfill insulation. Editable catalogue entry.',
+    images: createComforterImageSlots('Reversible Microfiber Comforter'),
+    materialType: 'Microfiber',
+    material: 'Siliconized Microfiber Fill',
+    firmness: 'Soft',
     dimensions: 'Single (60 × 90 in) / King (90 × 100 in)',
-    availableSizes: ['Single', 'King'],
     variants: [
       { name: 'Single', dimensions: '60 × 90 inches', price: null },
       { name: 'King', dimensions: '90 × 100 inches', price: null },
     ],
     price: null,
-    startingPrice: null,
-    originalPrice: null,
-    bullets: [
-      { text: 'Reversible Dual Neutral Palette', iconName: 'fabric' },
-      { text: 'Easy-Care Soft Brushed Outer Fabric', iconName: 'shield' },
+    features: [
+      'Dual-tone reversible finish',
+      'Lightweight everyday warmth',
+      'Easy-care soft outer fabric',
     ],
-    images: [
-      'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1000&q=80',
-    ],
-    description:
-      'Flip between two complementary neutral hues crafted with soft brushed microfiber for everyday bedroom comfort.',
-    density: '300 GSM Microfiber Fill',
-    coverFabric: 'Brushed Micro-Poly Taffeta',
-    coreMaterial: 'Siliconized Virgin Polyfill',
-    isBestseller: false,
+    coverInfo: 'Brushed microfiber outer fabric (editable placeholder)',
+    warranty: null,
+    isPlaceholderEntry: true,
   },
 ];
 
@@ -540,16 +165,48 @@ export function formatPrice(price: number | null | undefined): string {
 }
 
 /**
- * Returns the lowest available numeric price for a product across its sizePricing,
- * variants, or base price. Returns `null` if no prices have been set yet.
+ * Resolves the price for a specific mattress size + thickness combination.
+ * Thickness-specific price (`priceByThickness[thickness]`) takes priority over the
+ * flat size price (`sizeOption.price`). Returns `null` if unavailable.
+ */
+export function getMattressVariantPrice(
+  sizeOption?: MattressSizeOption,
+  thicknessInches?: number | null
+): number | null {
+  if (!sizeOption) return null;
+
+  if (
+    typeof thicknessInches === 'number' &&
+    sizeOption.priceByThickness &&
+    thicknessInches in sizeOption.priceByThickness
+  ) {
+    const thicknessPrice = sizeOption.priceByThickness[thicknessInches];
+    if (hasAvailablePrice(thicknessPrice)) {
+      return thicknessPrice;
+    }
+  }
+
+  return hasAvailablePrice(sizeOption.price) ? sizeOption.price : null;
+}
+
+/**
+ * Returns the lowest available numeric price across all variants/sizes of a product,
+ * or `null` if no numeric price has been set yet.
  */
 export function getProductDisplayPrice(product: ProductItem): number | null {
   const candidates: number[] = [];
 
-  if (product.sizePricing) {
-    for (const option of product.sizePricing) {
-      if (hasAvailablePrice(option.price)) {
-        candidates.push(option.price);
+  if (product.sizeOptions) {
+    for (const opt of product.sizeOptions) {
+      if (hasAvailablePrice(opt.price)) {
+        candidates.push(opt.price);
+      }
+      if (opt.priceByThickness) {
+        for (const value of Object.values(opt.priceByThickness)) {
+          if (hasAvailablePrice(value)) {
+            candidates.push(value);
+          }
+        }
       }
     }
   }
@@ -566,13 +223,36 @@ export function getProductDisplayPrice(product: ProductItem): number | null {
     candidates.push(product.price);
   }
 
-  if (hasAvailablePrice(product.startingPrice)) {
-    candidates.push(product.startingPrice);
-  }
-
   if (candidates.length === 0) {
     return null;
   }
 
   return Math.min(...candidates);
+}
+
+/**
+ * Returns only mattress categories that currently have at least one product.
+ * Prevents empty categories from appearing in navigation or filter bars.
+ */
+export function getAvailableMattressCategories(): {
+  name: MattressCategoryName;
+  count: number;
+}[] {
+  return MATTRESS_CATEGORIES.map((name) => ({
+    name,
+    count: MATTRESS_PRODUCTS.filter((m) => m.mattressCategories?.includes(name)).length,
+  })).filter((entry) => entry.count > 0);
+}
+
+/**
+ * Returns only pillow categories that currently have at least one product.
+ */
+export function getAvailablePillowCategories(): {
+  name: PillowCategoryName;
+  count: number;
+}[] {
+  return PILLOW_CATEGORIES.map((name) => ({
+    name,
+    count: PILLOW_PRODUCTS.filter((p) => p.pillowCategories?.includes(name)).length,
+  })).filter((entry) => entry.count > 0);
 }

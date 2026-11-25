@@ -1,20 +1,35 @@
 import React from 'react';
-import { getMattressEnquiryWhatsAppUrl } from '../../utils/whatsapp';
+import {
+  buildProductEnquiryWhatsAppUrl,
+  ProductEnquiryParams,
+} from '../../utils/whatsapp';
 
-interface MattressEnquiryLinkProps {
-  productName: string;
+interface MattressEnquiryLinkProps extends ProductEnquiryParams {
   className?: string;
 }
 
 /**
- * Subtle, reusable contextual WhatsApp enquiry line for mattress cards and detail pages.
- * Dynamically builds a mattress-specific pre-filled WhatsApp message from productName.
+ * Subtle, reusable contextual WhatsApp enquiry line displayed under mattress cards
+ * and on product detail pages. Dynamically builds a pre-filled WhatsApp message
+ * with the product name and currently selected variant details.
  */
 export const MattressEnquiryLink: React.FC<MattressEnquiryLinkProps> = ({
   productName,
+  sizeLabel,
+  dimensions,
+  thicknessInches,
+  variantName,
+  price,
   className = '',
 }) => {
-  const whatsappUrl = getMattressEnquiryWhatsAppUrl(productName);
+  const whatsappUrl = buildProductEnquiryWhatsAppUrl({
+    productName,
+    sizeLabel,
+    dimensions,
+    thicknessInches,
+    variantName,
+    price,
+  });
 
   return (
     <p className={`text-xs text-slate-500 ${className}`}>

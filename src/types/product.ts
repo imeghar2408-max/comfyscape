@@ -1,115 +1,172 @@
 /**
- * Structured product types for Comfyscape Catalogue
- * Covering Mattresses (bed), Pillows (pillow), and Comforters (comforter)
+ * Structured product types for the Comfyscape Catalogue.
+ * Covers Mattresses (bed), Pillows (pillow), and Comforters (comforter).
+ *
+ * All pricing fields accept `null` when pricing is unavailable,
+ * which causes the UI to display "Price on enquiry".
  */
 
 export type ProductCategory = 'bed' | 'pillow' | 'comforter';
 
-export type ProductFeel = 'Firm' | 'Medium Firm' | 'Medium Soft' | 'Gentle';
-export type ProductLook = 'Tight Top' | 'Euro Top';
-export type ProductType =
+export type ProductFirmness =
+  | 'Soft'
+  | 'Medium Soft'
+  | 'Medium Firm'
+  | 'Firm'
+  | 'Dual Feel (Medium Soft / Firm)';
+
+export type MattressCategoryName =
+  | 'Orthopedic Mattresses'
+  | 'Foam Mattresses'
+  | 'Memory Foam Mattresses'
+  | 'Latex Mattresses'
+  | 'Spring & Hybrid Mattresses'
+  | 'Grid Mattresses'
+  | 'Dual Comfort Mattresses'
+  | 'Rebonded Mattresses'
+  | 'HR Foam Mattresses'
+  | 'Foldable & Diwan Mattresses'
+  | 'Baby Mattresses';
+
+export type PillowCategoryName =
+  | 'Memory Foam Pillow'
+  | 'Fiber Pillow'
+  | 'Microfiber Pillow'
+  | 'Latex Pillow'
+  | 'Contour Pillow'
+  | 'Cooling Pillow';
+
+export type MaterialCategory =
   | 'Foam'
-  | 'Spring'
-  | 'Coir'
+  | 'Memory Foam'
   | 'Latex'
-  | 'Memory'
+  | 'Pocket Spring'
   | 'Hybrid'
+  | 'Polymer Grid'
+  | 'Rebonded Foam'
+  | 'HR Foam'
   | 'Microfiber'
   | 'Fiber';
 
-export type MattressSizeKey = 'Single' | 'Double' | 'Queen' | 'King';
+export interface ProductLayer {
+  name: string;
+  description: string;
+}
 
-export type PillowSubCategory =
-  | 'Memory Foam Pillows'
-  | 'Microfiber Pillows'
-  | 'Fiber Pillows'
-  | 'Latex Pillows'
-  | 'Contour Pillows'
-  | 'Cooling Pillows';
-
-export interface ProductBullet {
-  text: string;
-  iconName: 'breathable' | 'latex' | 'pressure' | 'fabric' | 'antiMite' | 'vpf' | 'airflow' | 'shield';
+export interface ProductSpecification {
+  label: string;
+  value: string;
 }
 
 /**
- * Per-size pricing option for mattresses.
- * Set `price` to a number when available, or `null` to display "Price on enquiry".
+ * Configurable size option for mattresses.
+ * Supports flat size pricing (`price`) or independent thickness-specific pricing (`priceByThickness`).
+ * Leave prices `null` to display "Price on enquiry".
  */
-export interface SizePriceOption {
-  size: MattressSizeKey;
+export interface MattressSizeOption {
+  size: string; // e.g. "Single", "Double", "Queen", "King", "Diwan Standard", "Crib Standard"
   dimensions: string; // e.g. "72 × 36 inches"
   price: number | null;
-  originalPrice?: number | null;
+  priceByThickness?: Partial<Record<number, number | null>>;
 }
 
 /**
- * Optional variant for pillows or comforters (e.g., Standard, Large, King, or loft variants).
- * Set `price` to a number when available, or `null` to display "Price on enquiry".
+ * Optional variant for pillows or comforters (e.g., Standard, Large, King).
+ * Leave `price: null` to display "Price on enquiry".
  */
 export interface ProductVariant {
   name: string;
   dimensions?: string;
-  feel?: ProductFeel;
+  firmness?: ProductFirmness;
   price: number | null;
+}
+
+/**
+ * Product image entry.
+ * Replace `src` with an actual Comfyscape image path (e.g. "/assets/products/ortho-foam-1.jpg").
+ * When `src` is `null` or empty, the UI renders a clean temporary placeholder showing `label`.
+ */
+export interface ProductImage {
+  src: string | null;
+  alt: string;
+  label: string;
 }
 
 export interface ProductItem {
   id: string;
-  name: string;
   slug: string;
+  name: string;
   category: ProductCategory;
-  kicker?: string;
-  series?: string;
-  benefit?: string;
-  feel?: ProductFeel;
-  look?: ProductLook;
-  type: ProductType;
-  thicknessOptions?: number[]; // e.g. [5, 6, 8, 10] for mattresses
-  availableSizes: string[]; // e.g. ["Single", "Double", "Queen", "King"]
+
   /**
-   * Individual size-based pricing for mattresses.
-   * Each standard size (Single, Double, Queen, King) holds its own price.
+   * Catalogue classifications used for navigation and filtering.
    */
-  sizePricing?: SizePriceOption[];
+  mattressCategories?: MattressCategoryName[];
+  pillowCategories?: PillowCategoryName[];
+
   /**
-   * Pillow-specific metadata
+   * Editable descriptions.
    */
-  pillowCategories?: PillowSubCategory[];
-  materialFilling?: string;
+  shortDescription: string;
+  description: string;
+
+  /**
+   * Multiple images per product (real image paths or clean temporary placeholders).
+   */
+  images: ProductImage[];
+
+  /**
+   * Core material classification (used for filtering) and descriptive material info.
+   */
+  materialType: MaterialCategory;
+  material: string;
+
+  /**
+   * Optional layer-by-layer construction breakdown (rendered only when populated).
+   */
+  layers?: ProductLayer[];
+
+  firmness?: ProductFirmness;
+  thicknessOptions?: number[]; // in inches, e.g. [5, 6, 8]
+
+  /**
+   * Mattress size options with dimensions and variant-specific pricing.
+   */
+  sizeOptions?: MattressSizeOption[];
+
+  /**
+   * Pillow/comforter dimensions and optional variants.
+   */
   dimensions?: string;
   variants?: ProductVariant[];
+
   /**
-   * Base / fallback price (null = "Price on enquiry")
+   * Base / fallback price (null = "Price on enquiry").
    */
   price?: number | null;
-  startingPrice?: number | null;
-  originalPrice?: number | null;
-  discountText?: string;
-  discountBadgeType?: 'percent' | 'flat';
-  warrantyYears?: number | null;
-  rating?: number | null;
-  reviewCount?: number | null;
-  bullets: ProductBullet[];
-  images: string[];
-  description: string;
-  density?: string;
-  coverFabric?: string;
-  coreMaterial?: string;
-  isBestseller?: boolean;
-}
 
-export interface ActiveFilters {
-  category: ProductCategory;
-  benefit: string;
-  series: string;
-  pillowCategory: string;
-  feel: string;
-  look: string;
-  size: string;
-  thickness: string;
-  type: string;
-  warranty: string;
-  searchQuery: string;
-  sortBy: 'relevance' | 'price-asc' | 'price-desc' | 'name';
+  /**
+   * 2–3 concise, factual product features shown on cards and product pages.
+   */
+  features: string[];
+
+  /**
+   * Outer cover / fabric information (if known).
+   */
+  coverInfo?: string;
+
+  /**
+   * Warranty information — leave `null` unless officially verified.
+   */
+  warranty?: string | null;
+
+  /**
+   * Additional product specifications (rendered only when populated).
+   */
+  additionalSpecs?: ProductSpecification[];
+
+  /**
+   * Marks placeholder catalogue entries that are meant to be updated with confirmed inventory details.
+   */
+  isPlaceholderEntry?: boolean;
 }

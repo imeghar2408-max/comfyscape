@@ -1,6 +1,10 @@
 import React from 'react';
 import { MessageCircle } from 'lucide-react';
-import { buildWhatsAppUrl, getGeneralWhatsAppUrl, getProductWhatsAppUrl } from '../../utils/whatsapp';
+import {
+  buildProductEnquiryWhatsAppUrl,
+  buildWhatsAppUrl,
+  getGeneralWhatsAppUrl,
+} from '../../utils/whatsapp';
 
 interface WhatsAppButtonProps {
   label?: string;
@@ -32,7 +36,12 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   if (customMessage) {
     href = buildWhatsAppUrl(customMessage);
   } else if (productName) {
-    href = getProductWhatsAppUrl(productName, size, thickness);
+    const parsedThickness = thickness ? Number.parseInt(thickness, 10) : null;
+    href = buildProductEnquiryWhatsAppUrl({
+      productName,
+      sizeLabel: size,
+      thicknessInches: Number.isFinite(parsedThickness) ? parsedThickness : null,
+    });
   } else {
     href = getGeneralWhatsAppUrl();
   }

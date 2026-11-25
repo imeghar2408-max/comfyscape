@@ -7,6 +7,7 @@ export const BRAND_CONFIG = {
   name: 'COMFYSCAPE',
   tagline: 'Better Sleep, Better Life.',
   subtitle: 'Handcrafted mattresses designed for restorative, spine-aligning comfort.',
+  logoUrl: '/assets/aistudio/WhatsApp_Image_2026-11-25_at_10.14.10_PM_8bedb4d5.jpeg',
   foundedYear: 2021,
 
   // Contact details

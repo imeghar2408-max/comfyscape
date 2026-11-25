@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import { BRAND_CONFIG } from '../../config/contact';
 import { WhatsAppButton } from '../common/WhatsAppButton';
+import { BrandLogo } from '../common/BrandLogo';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -74,18 +75,14 @@ export const Navbar: React.FC = () => {
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Brand Logo: Clean text-based COMFYSCAPE */}
+          {/* Brand Logo */}
           <Link
             to="/"
-            className="group flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8C7456] rounded py-1"
+            aria-label="Comfyscape Home"
+            className="group inline-flex items-center shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#8C7456] rounded-md py-1 transition-opacity hover:opacity-90"
             onClick={closeMenu}
           >
-            <span className="font-serif text-2xl sm:text-3xl font-bold tracking-[0.2em] text-[#1F1C18] group-hover:text-[#6D553C] transition-colors">
-              COMFYSCAPE
-            </span>
-            <span className="text-[9px] uppercase tracking-[0.3em] text-[#8C7B6B] -mt-0.5">
-              Better Sleep, Better Life
-            </span>
+            <BrandLogo size="md" variant="light" />
           </Link>
 
           {/* Desktop Navigation Links */}

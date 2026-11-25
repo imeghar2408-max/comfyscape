@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -19,16 +19,9 @@ import { WhatsAppButton } from '../components/common/WhatsAppButton';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const [wishlist, setWishlist] = useState<string[]>([]);
 
-  const featuredMattresses = MATTRESS_PRODUCTS.filter((p) => p.isBestseller).slice(0, 3);
+  const featuredMattresses = MATTRESS_PRODUCTS.slice(0, 3);
   const featuredPillows = PILLOW_PRODUCTS.slice(0, 3);
-
-  const toggleWishlist = (id: string) => {
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FAF8F5]">
@@ -174,12 +167,7 @@ export const HomePage: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredMattresses.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isWishlisted={wishlist.includes(product.id)}
-                onToggleWishlist={toggleWishlist}
-              />
+              <ProductCard key={product.id} product={product} />
             ))}
 
             <BuildMattressCard />
@@ -215,12 +203,7 @@ export const HomePage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredPillows.map((pillow) => (
-                <ProductCard
-                  key={pillow.id}
-                  product={pillow}
-                  isWishlisted={wishlist.includes(pillow.id)}
-                  onToggleWishlist={toggleWishlist}
-                />
+                <ProductCard key={pillow.id} product={pillow} />
               ))}
             </div>
           </div>

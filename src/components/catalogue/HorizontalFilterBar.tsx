@@ -1,66 +1,75 @@
 import React from 'react';
 import {
-  BENEFIT_FILTERS,
-  SERIES_FILTERS,
-  PILLOW_CATEGORIES,
+  getAvailableMattressCategories,
+  getAvailablePillowCategories,
+  MATTRESS_PRODUCTS,
   PILLOW_PRODUCTS,
 } from '../../data/products';
 import { ProductCategory } from '../../types/product';
 
 interface HorizontalFilterBarProps {
   activeCategory: ProductCategory;
-  selectedBenefit: string;
-  onSelectBenefit: (benefit: string) => void;
-  selectedSeries: string;
-  onSelectSeries: (series: string) => void;
+  selectedMattressCategory: string;
+  onSelectMattressCategory: (category: string) => void;
   selectedPillowCategory: string;
   onSelectPillowCategory: (category: string) => void;
 }
 
+/**
+ * Clean horizontal category navigation bar.
+ * Automatically renders ONLY categories that have at least one product.
+ */
 export const HorizontalFilterBar: React.FC<HorizontalFilterBarProps> = ({
   activeCategory,
-  selectedBenefit,
-  onSelectBenefit,
-  selectedSeries,
-  onSelectSeries,
+  selectedMattressCategory,
+  onSelectMattressCategory,
   selectedPillowCategory,
   onSelectPillowCategory,
 }) => {
-  // Pillow-specific horizontal category filter bar
+  if (activeCategory === 'comforter') {
+    return null;
+  }
+
   if (activeCategory === 'pillow') {
-    const allCategories = ['All', ...PILLOW_CATEGORIES];
+    const categories = getAvailablePillowCategories();
+    if (categories.length === 0) return null;
 
     return (
-      <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs mb-8">
+      <div className="bg-white p-4 rounded-xl border border-[#E6DFD4] shadow-2xs mb-8">
         <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
-          <span className="text-xs font-bold text-slate-800 tracking-wide shrink-0 min-w-[72px]">
-            Category:
+          <span className="text-xs font-bold text-[#1F1C18] tracking-wide uppercase shrink-0">
+            Pillow Type:
           </span>
           <div className="flex items-center gap-1.5 flex-nowrap">
-            {allCategories.map((cat) => {
-              const isActive = selectedPillowCategory === cat;
-              const count =
-                cat === 'All'
-                  ? PILLOW_PRODUCTS.length
-                  : PILLOW_PRODUCTS.filter((p) => p.pillowCategories?.includes(cat as any)).length;
+            <button
+              type="button"
+              onClick={() => onSelectPillowCategory('All')}
+              className={`text-xs px-3.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
+                selectedPillowCategory === 'All'
+                  ? 'bg-[#0B2F57] text-white border-[#0B2F57]'
+                  : 'bg-[#FAF8F5] text-[#4A453F] border-[#E0D7CB] hover:border-[#8C7456]'
+              }`}
+            >
+              All ({PILLOW_PRODUCTS.length})
+            </button>
 
+            {categories.map(({ name, count }) => {
+              const isActive = selectedPillowCategory === name;
               return (
                 <button
-                  key={cat}
+                  key={name}
                   type="button"
-                  onClick={() => onSelectPillowCategory(cat)}
-                  className={`text-xs px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors duration-150 border ${
+                  onClick={() => onSelectPillowCategory(name)}
+                  className={`text-xs px-3.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
                     isActive
-                      ? 'bg-[#0B2F57] text-white border-[#0B2F57] shadow-xs'
-                      : 'bg-white text-slate-600 border-slate-300 hover:border-slate-400 hover:text-slate-900'
+                      ? 'bg-[#0B2F57] text-white border-[#0B2F57]'
+                      : 'bg-[#FAF8F5] text-[#4A453F] border-[#E0D7CB] hover:border-[#8C7456]'
                   }`}
                 >
-                  <span>{cat}</span>
-                  {count > 0 && (
-                    <span className={`ml-1.5 text-[10px] ${isActive ? 'text-slate-200' : 'text-slate-400'}`}>
-                      ({count})
-                    </span>
-                  )}
+                  {name}{' '}
+                  <span className={isActive ? 'text-slate-200' : 'text-[#8A8275]'}>
+                    ({count})
+                  </span>
                 </button>
               );
             })}
@@ -70,60 +79,46 @@ export const HorizontalFilterBar: React.FC<HorizontalFilterBarProps> = ({
     );
   }
 
-  // Comforter category doesn't need mattress-only benefit/series filters
-  if (activeCategory === 'comforter') {
-    return null;
-  }
+  // Mattress categories (non-empty only)
+  const mattressCategories = getAvailableMattressCategories();
+  if (mattressCategories.length === 0) return null;
 
-  // Mattress (bed) horizontal filter bar
   return (
-    <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs mb-8 space-y-3.5">
-      {/* Row 1: Benefit Filters */}
+    <div className="bg-white p-4 rounded-xl border border-[#E6DFD4] shadow-2xs mb-8">
       <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar">
-        <span className="text-xs font-bold text-slate-800 tracking-wide shrink-0 min-w-[60px]">
-          Benefit:
+        <span className="text-xs font-bold text-[#1F1C18] tracking-wide uppercase shrink-0">
+          Mattress Type:
         </span>
         <div className="flex items-center gap-1.5 flex-nowrap">
-          {BENEFIT_FILTERS.map((benefit) => {
-            const isActive = selectedBenefit === benefit;
-            return (
-              <button
-                key={benefit}
-                type="button"
-                onClick={() => onSelectBenefit(benefit)}
-                className={`text-xs px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors duration-150 border ${
-                  isActive
-                    ? 'bg-[#0B2F57] text-white border-[#0B2F57] shadow-xs'
-                    : 'bg-white text-slate-600 border-slate-300 hover:border-slate-400 hover:text-slate-900'
-                }`}
-              >
-                {benefit}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+          <button
+            type="button"
+            onClick={() => onSelectMattressCategory('All')}
+            className={`text-xs px-3.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
+              selectedMattressCategory === 'All'
+                ? 'bg-[#0B2F57] text-white border-[#0B2F57]'
+                : 'bg-[#FAF8F5] text-[#4A453F] border-[#E0D7CB] hover:border-[#8C7456]'
+            }`}
+          >
+            All ({MATTRESS_PRODUCTS.length})
+          </button>
 
-      {/* Row 2: Series Filters */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-1 no-scrollbar pt-1 border-t border-slate-100">
-        <span className="text-xs font-bold text-slate-800 tracking-wide shrink-0 min-w-[60px]">
-          Series:
-        </span>
-        <div className="flex items-center gap-1.5 flex-nowrap">
-          {SERIES_FILTERS.map((series) => {
-            const isActive = selectedSeries === series;
+          {mattressCategories.map(({ name, count }) => {
+            const isActive = selectedMattressCategory === name;
             return (
               <button
-                key={series}
+                key={name}
                 type="button"
-                onClick={() => onSelectSeries(series)}
-                className={`text-xs px-3.5 py-1.5 rounded-full font-medium whitespace-nowrap transition-colors duration-150 border ${
+                onClick={() => onSelectMattressCategory(name)}
+                className={`text-xs px-3.5 py-1.5 rounded-lg font-medium whitespace-nowrap transition-colors border ${
                   isActive
-                    ? 'bg-[#0B2F57] text-white border-[#0B2F57] shadow-xs'
-                    : 'bg-white text-slate-600 border-slate-300 hover:border-slate-400 hover:text-slate-900'
+                    ? 'bg-[#0B2F57] text-white border-[#0B2F57]'
+                    : 'bg-[#FAF8F5] text-[#4A453F] border-[#E0D7CB] hover:border-[#8C7456]'
                 }`}
               >
-                {series}
+                {name}{' '}
+                <span className={isActive ? 'text-slate-200' : 'text-[#8A8275]'}>
+                  ({count})
+                </span>
               </button>
             );
           })}

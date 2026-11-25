@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Clock, ArrowUpRight } from 'lucide-react';
 import { BRAND_CONFIG } from '../../config/contact';
 import { WhatsAppButton } from '../common/WhatsAppButton';
+import { BrandLogo } from '../common/BrandLogo';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -14,10 +15,14 @@ export const Footer: React.FC = () => {
         {/* Top section: Brand statement and Quick WhatsApp Banner */}
         <div className="pb-12 border-b border-[#36322C] flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div>
-            <span className="font-serif text-3xl font-bold tracking-[0.2em] text-[#FAF8F5]">
-              COMFYSCAPE
-            </span>
-            <p className="text-sm text-[#BDB2A3] mt-2 max-w-xl">
+            <Link
+              to="/"
+              aria-label="Comfyscape Home"
+              className="inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C8B8A6] rounded-lg"
+            >
+              <BrandLogo size="sm" variant="dark" />
+            </Link>
+            <p className="text-sm text-[#BDB2A3] mt-3 max-w-xl">
               {BRAND_CONFIG.tagline} Dedicated to creating peaceful nights and energized mornings with precision-engineered mattresses.
             </p>
           </div>

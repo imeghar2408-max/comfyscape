@@ -12,6 +12,7 @@ import {
 import { BRAND_CONFIG } from '../config/contact';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { WhatsAppButton } from '../components/common/WhatsAppButton';
+import { BrandLogo } from '../components/common/BrandLogo';
 
 export const AboutPage: React.FC = () => {
   return (
@@ -23,7 +24,8 @@ export const AboutPage: React.FC = () => {
           <Breadcrumbs items={[{ label: 'About Us' }]} className="mb-4" />
           
           <div className="max-w-3xl space-y-4">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#8C7456] font-semibold">
+            <BrandLogo size="lg" variant="light" className="-ml-2" />
+            <span className="block text-xs uppercase tracking-[0.25em] text-[#8C7456] font-semibold">
               Our Heritage & Philosophy
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#1F1C18] leading-tight">
@@ -165,7 +167,7 @@ export const AboutPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-[#575047] leading-relaxed">
                 Constructed with micro-cellular pores that snap back instantly. Prevents sinking, distributes weight evenly, and allows continuous ventilation.
               </p>
-              <Link to="/mattresses?category=foam" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
+              <Link to="/mattresses?category=bed&type=HR%20Foam%20Mattresses" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
                 <span>Explore HR Foam models</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
@@ -177,7 +179,7 @@ export const AboutPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-[#575047] leading-relaxed">
                 Steam-sanitized high-pressure foam chips compressed to 85D–90D. Yields a flat, unbending foundation recommended for chronic lower back and lumbar stiffness.
               </p>
-              <Link to="/mattresses?category=rebonded" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
+              <Link to="/mattresses?category=bed&type=Rebonded%20Mattresses" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
                 <span>Explore Rebonded models</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
@@ -189,8 +191,8 @@ export const AboutPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-[#575047] leading-relaxed">
                 Rubberized natural coconut husk fiber provides natural air passages. Eliminates body heat buildup, highly durable, and 100% eco-conscious.
               </p>
-              <Link to="/mattresses?category=coir" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
-                <span>Explore Coir models</span>
+              <Link to="/mattresses?category=bed&type=Latex%20Mattresses" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
+                <span>Explore Latex models</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
@@ -201,7 +203,7 @@ export const AboutPage: React.FC = () => {
               <p className="text-xs sm:text-sm text-[#575047] leading-relaxed">
                 Temperature-sensitive memory cells mold gently to shoulder and hip curves. Completely absorbs tossing and turning, allowing uninterrupted sleep for couples.
               </p>
-              <Link to="/mattresses?category=memory-foam" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
+              <Link to="/mattresses?category=bed&type=Memory%20Foam%20Mattresses" className="text-xs font-semibold text-[#1F1C18] hover:text-[#8C7456] flex items-center gap-1 pt-2">
                 <span>Explore Memory Foam models</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>

@@ -2,8 +2,9 @@ import { BRAND_CONFIG } from '../config/contact';
 import { formatPrice, hasAvailablePrice } from '../data/products';
 
 /**
- * Builds a direct WhatsApp click-to-chat URL with a pre-encoded message.
- * Format: https://wa.me/PHONE_NUMBER?text=ENCODED_MESSAGE
+ * Builds a direct WhatsApp click-to-chat URL with a properly URL-encoded message.
+ * Uses the shared business WhatsApp number from BRAND_CONFIG (919310008171).
+ * Format: https://wa.me/919310008171?text=ENCODED_MESSAGE
  */
 export function buildWhatsAppUrl(message: string, overrideNumber?: string): string {
   const number = overrideNumber || BRAND_CONFIG.contact.whatsappRawNumber;
@@ -12,22 +13,14 @@ export function buildWhatsAppUrl(message: string, overrideNumber?: string): stri
 }
 
 /**
- * Convenience helper for general business enquiries
+ * Convenience helper for general business enquiries.
  */
 export function getGeneralWhatsAppUrl(): string {
   return buildWhatsAppUrl(BRAND_CONFIG.whatsappTemplates.generalEnquiry);
 }
 
 /**
- * Convenience helper for specific mattress enquiries
- */
-export function getProductWhatsAppUrl(productName: string, size?: string, thickness?: string): string {
-  const message = BRAND_CONFIG.whatsappTemplates.productEnquiry(productName, size, thickness);
-  return buildWhatsAppUrl(message);
-}
-
-/**
- * Convenience helper for custom dimensions
+ * Convenience helper for custom dimension enquiries.
  */
 export function getCustomSizeWhatsAppUrl(productName?: string): string {
   const message = BRAND_CONFIG.whatsappTemplates.customSizeEnquiry(productName);
@@ -44,11 +37,20 @@ export interface ProductEnquiryParams {
 }
 
 /**
- * Builds a detailed pre-filled WhatsApp enquiry URL containing the product name,
- * selected size/variant, dimensions, thickness (if applicable), and price (or a note
- * stating the customer is enquiring about the price when unavailable).
+ * Generates the structured pre-filled WhatsApp enquiry message dynamically from
+ * product data and the customer's currently selected variant.
+ *
+ * Example:
+ * Hello, I am interested in the Orthopedic Foam Mattress.
+ *
+ * Size: Queen
+ * Dimensions: 78 × 60 inches
+ * Thickness: 6 inches
+ * Price: Price on enquiry
+ *
+ * Please share more details.
  */
-export function buildProductEnquiryWhatsAppUrl({
+export function buildProductEnquiryMessage({
   productName,
   sizeLabel,
   dimensions,
@@ -56,50 +58,41 @@ export function buildProductEnquiryWhatsAppUrl({
   variantName,
   price,
 }: ProductEnquiryParams): string {
-  const lines: string[] = [
-    `Hello Comfyscape! I am interested in the *${productName}*.`,
-  ];
+  const detailLines: string[] = [];
 
-  if (sizeLabel && dimensions) {
-    lines.push(`- Size: ${sizeLabel} (${dimensions})`);
-  } else if (sizeLabel) {
-    lines.push(`- Size: ${sizeLabel}`);
-  } else if (variantName && dimensions) {
-    lines.push(`- Variant: ${variantName} (${dimensions})`);
+  if (sizeLabel) {
+    detailLines.push(`Size: ${sizeLabel}`);
   } else if (variantName) {
-    lines.push(`- Variant: ${variantName}`);
-  } else if (dimensions) {
-    lines.push(`- Dimensions: ${dimensions}`);
+    detailLines.push(`Variant: ${variantName}`);
   }
 
-  if (thicknessInches) {
-    lines.push(`- Thickness: ${thicknessInches} inches`);
+  if (dimensions) {
+    detailLines.push(`Dimensions: ${dimensions}`);
+  }
+
+  if (typeof thicknessInches === 'number' && thicknessInches > 0) {
+    detailLines.push(`Thickness: ${thicknessInches} inches`);
   }
 
   if (hasAvailablePrice(price)) {
-    lines.push(`- Price: ${formatPrice(price)}`);
-    lines.push('Could you please share availability and further details?');
+    detailLines.push(`Price: ${formatPrice(price)}`);
   } else {
-    lines.push('- Price: Enquiring about the price');
-    lines.push('Could you please share the price, availability, and further details?');
+    detailLines.push('Price: Price on enquiry (please share current pricing)');
   }
 
-  return buildWhatsAppUrl(lines.join('\n'));
+  return [
+    `Hello, I am interested in the ${productName}.`,
+    '',
+    ...detailLines,
+    '',
+    'Please share more details.',
+  ].join('\n');
 }
 
 /**
- * Generates the dynamic pre-filled WhatsApp enquiry message for a specific mattress.
- * Example: "Hello, I'm interested in the Comfyscape Comfort Plus mattress. Please share more details about this product."
+ * Builds the full WhatsApp URL (https://wa.me/919310008171?text=...) for a specific
+ * product and its currently selected variant.
  */
-export function getMattressEnquiryMessage(productName: string): string {
-  const normalizedName = productName.trim().replace(/\s+mattress$/i, '');
-  return `Hello, I'm interested in the Comfyscape ${normalizedName} mattress. Please share more details about this product.`;
+export function buildProductEnquiryWhatsAppUrl(params: ProductEnquiryParams): string {
+  return buildWhatsAppUrl(buildProductEnquiryMessage(params));
 }
-
-/**
- * Builds the direct WhatsApp URL (https://wa.me/919310008171?text=...) for a specific mattress.
- */
-export function getMattressEnquiryWhatsAppUrl(productName: string): string {
-  return buildWhatsAppUrl(getMattressEnquiryMessage(productName));
-}
-

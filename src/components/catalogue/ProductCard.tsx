@@ -1,230 +1,216 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Wind, Droplets, Shield, Layers, ArrowRight } from 'lucide-react';
-import { ProductItem, ProductBullet } from '../../types/product';
+import { ArrowRight, Check } from 'lucide-react';
+import { ProductItem } from '../../types/product';
 import {
   formatPrice,
+  getMattressVariantPrice,
   getProductDetailPath,
   getProductDisplayPrice,
   hasAvailablePrice,
 } from '../../data/products';
+import { ProductImageDisplay } from '../common/ProductImageDisplay';
 import { MattressEnquiryLink } from '../common/MattressEnquiryLink';
 
 interface ProductCardProps {
   product: ProductItem;
-  isWishlisted?: boolean;
-  onToggleWishlist?: (productId: string) => void;
-  /**
-   * Optional legacy callback. By default clicking the card or CTA navigates directly
-   * to the product's detail page.
-   */
-  onSelectSize?: (product: ProductItem) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  isWishlisted = false,
-  onToggleWishlist,
-}) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const detailPath = getProductDetailPath(product);
-  const displayPrice = getProductDisplayPrice(product);
-  const showDiscount =
-    hasAvailablePrice(displayPrice) &&
-    hasAvailablePrice(product.originalPrice) &&
-    Boolean(product.discountText);
+  const isMattress = product.category === 'bed';
 
-  const renderBulletIcon = (iconName: ProductBullet['iconName']) => {
-    switch (iconName) {
-      case 'breathable':
-      case 'airflow':
-        return <Wind className="w-3.5 h-3.5 text-slate-500" />;
-      case 'latex':
-        return <Droplets className="w-3.5 h-3.5 text-purple-600" />;
-      case 'pressure':
-      case 'vpf':
-        return <Layers className="w-3.5 h-3.5 text-indigo-500" />;
-      case 'antiMite':
-      case 'shield':
-      case 'fabric':
-      default:
-        return <Shield className="w-3.5 h-3.5 text-amber-600" />;
-    }
-  };
+  // Default selected size for mattresses (prefer Queen if available, else first size)
+  const sizeOptions = product.sizeOptions ?? [];
+  const defaultSize =
+    sizeOptions.find((s) => s.size === 'Queen')?.size || sizeOptions[0]?.size || '';
 
-  // Quiet unboxed metadata line for pillows/comforters or mattresses
-  const kickerText =
-    product.kicker ||
-    [
-      product.category === 'pillow' && product.pillowCategories?.[0]
-        ? product.pillowCategories[0]
-        : product.series,
-      product.feel,
-    ]
-      .filter(Boolean)
-      .join(' · ');
+  const [selectedSize, setSelectedSize] = useState<string>(defaultSize);
+
+  const activeSizeOption = isMattress
+    ? sizeOptions.find((s) => s.size === selectedSize) || sizeOptions[0]
+    : undefined;
+
+  const defaultThickness =
+    isMattress && product.thicknessOptions && product.thicknessOptions.length > 0
+      ? product.thicknessOptions.includes(6)
+        ? 6
+        : product.thicknessOptions[0]
+      : null;
+
+  const activeVariant =
+    !isMattress && product.variants && product.variants.length > 0
+      ? product.variants[0]
+      : undefined;
+
+  const displayPrice = isMattress
+    ? getMattressVariantPrice(activeSizeOption, defaultThickness)
+    : getProductDisplayPrice(product);
+
+  const thicknessSummary =
+    isMattress && product.thicknessOptions && product.thicknessOptions.length > 0
+      ? product.thicknessOptions.length === 1
+        ? `${product.thicknessOptions[0]}"`
+        : `${Math.min(...product.thicknessOptions)}" – ${Math.max(...product.thicknessOptions)}"`
+      : null;
+
+  const primaryCategoryLabel = isMattress
+    ? product.mattressCategories?.[0]
+    : product.category === 'pillow'
+      ? product.pillowCategories?.[0]
+      : 'Comforter';
 
   return (
-    <article className="group bg-white rounded-xl border border-slate-200/90 hover:border-slate-300 hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden">
-      {/* 1. Image container */}
-      <div className="relative aspect-[16/10] sm:aspect-[4/3] bg-slate-100 overflow-hidden">
-        {showDiscount && product.discountText && (
-          <div className="absolute top-2.5 left-2.5 z-10">
-            <span
-              className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider py-1 px-2.5 rounded-sm shadow-xs ${
-                product.discountBadgeType === 'flat'
-                  ? 'bg-[#6A0DAD] text-white'
-                  : 'bg-[#7B2CBF] text-white'
-              }`}
-            >
-              {product.discountText}
-            </span>
-          </div>
-        )}
-
-        {/* Wishlist Heart on Top-Right */}
-        {onToggleWishlist && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onToggleWishlist(product.id);
-            }}
-            aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-            className={`absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all bg-white/90 backdrop-blur-xs shadow-xs border border-slate-200 ${
-              isWishlisted
-                ? 'text-rose-500 fill-rose-500'
-                : 'text-slate-500 hover:text-rose-500 hover:scale-110'
-            }`}
-          >
-            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
-          </button>
-        )}
-
-        <Link to={detailPath} className="block w-full h-full focus:outline-none">
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            loading="lazy"
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
-          />
-        </Link>
-      </div>
-
-      {/* 2. Card Content Body (clickable to product detail page) */}
+    <article className="group bg-white rounded-xl border border-[#E6DFD4] hover:border-[#CFC3B2] hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden">
+      {/* 1. Product Image — visual focus, zero promotional clutter */}
       <Link
         to={detailPath}
-        className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3.5 focus:outline-none"
+        className="block relative aspect-[4/3] bg-[#F4EFEA] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B2F57]"
       >
-        <div>
-          {/* Top Kicker */}
-          {kickerText && (
-            <div className="text-[11px] font-bold text-slate-500 tracking-wider uppercase truncate mb-1">
-              {kickerText}
-            </div>
-          )}
+        <ProductImageDisplay
+          image={product.images[0]}
+          productName={product.name}
+          category={product.category}
+          variant="card"
+          className="group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+        />
+      </Link>
 
-          {/* Product Title */}
-          <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#0066B2] transition-colors leading-snug line-clamp-1">
-            {product.name}
-          </h3>
-
-          {/* Unboxed quick specification summary */}
-          <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-xs text-slate-500 mt-1.5">
-            {product.category === 'pillow' ? (
+      {/* 2. Card Body */}
+      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+        <div className="space-y-2.5">
+          {/* Category & quick specs line */}
+          <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 text-[11px] font-medium text-[#7A7369]">
+            {primaryCategoryLabel && (
+              <span className="uppercase tracking-wider font-semibold text-[#8C7456]">
+                {primaryCategoryLabel}
+              </span>
+            )}
+            {product.firmness && (
               <>
-                {product.materialFilling && (
-                  <span className="truncate max-w-full">{product.materialFilling}</span>
-                )}
-                {product.dimensions && (
-                  <>
-                    <span aria-hidden="true">·</span>
-                    <span>{product.dimensions}</span>
-                  </>
-                )}
+                <span aria-hidden="true">·</span>
+                <span>{product.firmness}</span>
               </>
-            ) : (
+            )}
+            {thicknessSummary && (
               <>
-                {product.feel && <span>{product.feel}</span>}
-                {product.look && (
-                  <>
-                    <span aria-hidden="true">·</span>
-                    <span>{product.look}</span>
-                  </>
-                )}
-                {product.type && (
-                  <>
-                    <span aria-hidden="true">·</span>
-                    <span>{product.type}</span>
-                  </>
-                )}
+                <span aria-hidden="true">·</span>
+                <span>{thicknessSummary} thick</span>
               </>
             )}
           </div>
 
-          {/* Two bullet features */}
-          {product.bullets.length > 0 && (
-            <div className="mt-3.5 space-y-1.5 pt-3 border-t border-slate-100">
-              {product.bullets.slice(0, 2).map((bullet, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs text-slate-600">
-                  <span className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                    {renderBulletIcon(bullet.iconName)}
-                  </span>
-                  <span className="truncate">{bullet.text}</span>
-                </div>
+          {/* Simple Descriptive Product Name */}
+          <Link
+            to={detailPath}
+            className="block focus:outline-none focus-visible:underline"
+          >
+            <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1F1C18] group-hover:text-[#0B2F57] transition-colors leading-snug">
+              {product.name}
+            </h3>
+          </Link>
+
+          {/* Short Description */}
+          <p className="text-xs sm:text-sm text-[#5A534B] leading-relaxed line-clamp-2">
+            {product.shortDescription}
+          </p>
+
+          {/* 2–3 Factual Product Features */}
+          {product.features.length > 0 && (
+            <ul className="pt-2.5 border-t border-[#F1ECE4] space-y-1.5">
+              {product.features.slice(0, 3).map((feature, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-2 text-xs text-[#4A453F]"
+                >
+                  <Check className="w-3.5 h-3.5 text-[#8C7456] shrink-0 mt-0.5" />
+                  <span>{feature}</span>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
 
-        {/* Price Row */}
-        <div className="pt-2">
-          {hasAvailablePrice(displayPrice) ? (
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-                {product.category === 'bed' ? `From ${formatPrice(displayPrice)}` : formatPrice(displayPrice)}
-              </span>
-              {hasAvailablePrice(product.originalPrice) && (
-                <span className="text-xs text-slate-400 line-through">
-                  {formatPrice(product.originalPrice)}
-                </span>
-              )}
-              {showDiscount && product.discountText && (
-                <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">
-                  {product.discountText}
-                </span>
-              )}
-            </div>
-          ) : (
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-base sm:text-lg font-bold text-[#0B2F57] tracking-tight">
-                {formatPrice(null)}
-              </span>
-              {product.category === 'bed' && (
-                <span className="text-[11px] text-slate-500">4 sizes available</span>
-              )}
+        {/* Bottom Details: Compact Size Selector (Mattresses) + Price */}
+        <div className="space-y-3 pt-2 border-t border-[#F1ECE4]">
+          {isMattress && sizeOptions.length > 0 && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-[11px] text-[#7A7369]">
+                <span className="font-semibold uppercase tracking-wider">Size</span>
+                {activeSizeOption && <span>{activeSizeOption.dimensions}</span>}
+              </div>
+              <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={`Select size for ${product.name}`}>
+                {sizeOptions.map((opt) => {
+                  const isSelected = activeSizeOption?.size === opt.size;
+                  return (
+                    <button
+                      key={opt.size}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      onClick={() => setSelectedSize(opt.size)}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
+                        isSelected
+                          ? 'bg-[#0B2F57] text-white border-[#0B2F57]'
+                          : 'bg-[#FAF8F5] text-[#4A453F] border-[#E0D7CB] hover:border-[#8C7456]'
+                      }`}
+                    >
+                      {opt.size}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
-        </div>
-      </Link>
 
-      {/* 3. Full-Width Solid Blue Action Button navigating directly to Product Detail Page */}
+          {!isMattress && product.dimensions && (
+            <div className="text-[11px] text-[#7A7369]">
+              <span className="font-semibold text-[#4A453F]">Dimensions:</span>{' '}
+              {product.dimensions}
+            </div>
+          )}
+
+          {/* Price or "Price on enquiry" */}
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-base sm:text-lg font-bold text-[#0B2F57] tracking-tight">
+              {hasAvailablePrice(displayPrice)
+                ? formatPrice(displayPrice)
+                : formatPrice(null)}
+            </span>
+            {isMattress && activeSizeOption && (
+              <span className="text-[11px] text-[#7A7369]">
+                {activeSizeOption.size}
+                {defaultThickness ? ` · ${defaultThickness}"` : ''}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Primary View Details CTA */}
       <Link
         to={detailPath}
-        className={`w-full bg-[#0071C1] hover:bg-[#005B9C] text-white text-xs font-bold uppercase tracking-wider py-3.5 px-4 transition-colors duration-150 flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071C1] ${
-          product.category === 'bed' ? '' : 'rounded-b-xl'
-        }`}
+        className="w-full bg-[#0B2F57] hover:bg-[#133F72] text-white text-xs font-semibold uppercase tracking-wider py-3.5 px-4 transition-colors duration-150 flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B2F57]"
       >
-        <span>{product.category === 'bed' ? 'SELECT SIZE & VIEW DETAILS' : 'VIEW DETAILS'}</span>
+        <span>View Details</span>
         <ArrowRight className="w-3.5 h-3.5" />
       </Link>
 
-      {/* 4. Subtle contextual WhatsApp enquiry link under every mattress card */}
-      {product.category === 'bed' && (
-        <div className="px-4 py-2.5 bg-[#FAF8F5] border-t border-slate-100 text-center">
-          <MattressEnquiryLink productName={product.name} />
-        </div>
-      )}
+      {/* 4. Subtle contextual WhatsApp enquiry link */}
+      <div className="px-4 py-2.5 bg-[#FAF8F5] border-t border-[#EAE3D8] text-center">
+        <MattressEnquiryLink
+          productName={product.name}
+          sizeLabel={isMattress ? activeSizeOption?.size : undefined}
+          variantName={!isMattress ? activeVariant?.name : undefined}
+          dimensions={
+            isMattress
+              ? activeSizeOption?.dimensions
+              : activeVariant?.dimensions || product.dimensions
+          }
+          thicknessInches={isMattress ? defaultThickness : null}
+          price={displayPrice}
+        />
+      </div>
     </article>
   );
 };

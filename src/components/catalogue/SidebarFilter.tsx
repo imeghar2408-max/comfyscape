@@ -1,70 +1,94 @@
 import React from 'react';
 import { RotateCcw } from 'lucide-react';
 import { ProductCategory } from '../../types/product';
-import { PILLOW_CATEGORIES } from '../../data/products';
+
+export interface PriceRangeOption {
+  id: string;
+  label: string;
+  min?: number;
+  max?: number;
+}
+
+export const PRICE_RANGE_OPTIONS: readonly PriceRangeOption[] = [
+  { id: 'All', label: 'All Prices' },
+  { id: 'under-10000', label: 'Under ₹10,000', max: 10000 },
+  { id: '10000-20000', label: '₹10,000 – ₹20,000', min: 10000, max: 20000 },
+  { id: '20000-35000', label: '₹20,000 – ₹35,000', min: 20000, max: 35000 },
+  { id: 'above-35000', label: 'Above ₹35,000', min: 35000 },
+];
 
 interface SidebarFilterProps {
   activeCategory: ProductCategory;
-  feel: string;
-  onFeelChange: (val: string) => void;
-  look: string;
-  onLookChange: (val: string) => void;
-  size: string;
-  onSizeChange: (val: string) => void;
+  categoryOptions: string[];
+  selectedSubCategory: string;
+  onSubCategoryChange: (val: string) => void;
+  materialOptions: string[];
+  material: string;
+  onMaterialChange: (val: string) => void;
+  firmnessOptions: string[];
+  firmness: string;
+  onFirmnessChange: (val: string) => void;
+  thicknessOptions: number[];
   thickness: string;
   onThicknessChange: (val: string) => void;
-  type: string;
-  onTypeChange: (val: string) => void;
-  pillowCategory: string;
-  onPillowCategoryChange: (val: string) => void;
+  sizeOptions: string[];
+  size: string;
+  onSizeChange: (val: string) => void;
+  hasPricedProducts: boolean;
+  priceRange: string;
+  onPriceRangeChange: (val: string) => void;
   onResetAll: () => void;
   isFiltered: boolean;
 }
 
+/**
+ * Data-driven sidebar filter panel.
+ * Only renders filter sections and options that actually exist in the current catalogue,
+ * and reveals the Price filter automatically once numeric prices are populated.
+ */
 export const SidebarFilter: React.FC<SidebarFilterProps> = ({
   activeCategory,
-  feel,
-  onFeelChange,
-  look,
-  onLookChange,
-  size,
-  onSizeChange,
+  categoryOptions,
+  selectedSubCategory,
+  onSubCategoryChange,
+  materialOptions,
+  material,
+  onMaterialChange,
+  firmnessOptions,
+  firmness,
+  onFirmnessChange,
+  thicknessOptions,
   thickness,
   onThicknessChange,
-  type,
-  onTypeChange,
-  pillowCategory,
-  onPillowCategoryChange,
+  sizeOptions,
+  size,
+  onSizeChange,
+  hasPricedProducts,
+  priceRange,
+  onPriceRangeChange,
   onResetAll,
   isFiltered,
 }) => {
-  const feelOptions = ['All', 'Firm', 'Medium Firm', 'Medium Soft', 'Gentle'];
-  const lookOptions = ['All', 'Tight Top', 'Euro Top'];
-  const mattressSizeOptions = ['All', 'Single', 'Double', 'Queen', 'King', 'Custom Size'];
-  const thicknessOptions = ['All', '4', '5', '6', '7', '8', '9', '10', '12'];
-  const mattressTypeOptions = ['All', 'Foam', 'Spring', 'Coir', 'Latex', 'Memory', 'Hybrid'];
-  const pillowTypeOptions = ['All', 'Memory', 'Microfiber', 'Fiber', 'Latex'];
-  const comforterSizeOptions = ['All', 'Single', 'King'];
-
-  const renderFilterGrid = (
+  const renderFilterGroup = (
     label: string,
-    options: readonly string[],
+    options: { value: string; display: string }[],
     selectedVal: string,
     onSelect: (val: string) => void,
-    unitSuffix?: string,
     columns: 1 | 2 = 2
   ) => {
+    if (options.length <= 1) return null;
+
     return (
-      <div className="border-b border-slate-100 pb-5 mb-5 last:border-b-0 last:pb-0 last:mb-0">
+      <div className="border-b border-[#EFEAE1] pb-5 mb-5 last:border-b-0 last:pb-0 last:mb-0">
         <div className="flex items-center justify-between mb-2.5">
-          <span className="text-xs font-bold text-slate-800 tracking-wider uppercase">
+          <span className="text-xs font-bold text-[#1F1C18] tracking-wider uppercase">
             {label}
           </span>
           {selectedVal !== 'All' && (
             <button
               type="button"
               onClick={() => onSelect('All')}
-              className="text-[10px] text-[#0066B2] hover:underline"
+              className="text-[11px] text-[#0B2F57] hover:underline font-medium"
             >
               Reset
             </button>
@@ -73,23 +97,21 @@ export const SidebarFilter: React.FC<SidebarFilterProps> = ({
 
         <div className={`grid ${columns === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-2`}>
           {options.map((opt) => {
-            const isSelected = selectedVal === opt;
-            const displayText = unitSuffix && opt !== 'All' ? `${opt} ${unitSuffix}` : opt;
-
+            const isSelected = selectedVal === opt.value;
             return (
               <button
-                key={opt}
+                key={opt.value}
                 type="button"
-                onClick={() => onSelect(opt)}
+                onClick={() => onSelect(opt.value)}
                 className={`py-2 px-2.5 rounded-lg text-xs font-medium ${
                   columns === 1 ? 'text-left' : 'text-center'
-                } transition-all duration-150 border ${
+                } transition-colors border ${
                   isSelected
-                    ? 'bg-[#0B2F57] text-white border-[#0B2F57] shadow-xs'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
+                    ? 'bg-[#0B2F57] text-white border-[#0B2F57]'
+                    : 'bg-[#FAF8F5] text-[#4A453F] border-[#E2D9CC] hover:border-[#8C7456] hover:text-[#1F1C18]'
                 }`}
               >
-                {displayText}
+                {opt.display}
               </button>
             );
           })}
@@ -98,17 +120,25 @@ export const SidebarFilter: React.FC<SidebarFilterProps> = ({
     );
   };
 
+  const toOptions = (values: string[], suffix?: string) => [
+    { value: 'All', display: 'All' },
+    ...values.map((v) => ({
+      value: v,
+      display: suffix ? `${v}${suffix}` : v,
+    })),
+  ];
+
   return (
-    <aside className="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs">
-      <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+    <aside className="bg-white p-5 rounded-xl border border-[#E6DFD4] shadow-2xs">
+      <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#EFEAE1]">
+        <h3 className="text-sm font-bold text-[#1F1C18] uppercase tracking-wider">
           Filter By
         </h3>
         {isFiltered && (
           <button
             type="button"
             onClick={onResetAll}
-            className="flex items-center gap-1 text-xs text-[#0066B2] hover:text-[#004B80] font-semibold"
+            className="flex items-center gap-1 text-xs text-[#0B2F57] hover:underline font-semibold"
           >
             <RotateCcw className="w-3 h-3" />
             <span>Clear All</span>
@@ -116,37 +146,63 @@ export const SidebarFilter: React.FC<SidebarFilterProps> = ({
         )}
       </div>
 
-      {activeCategory === 'bed' && (
-        <>
-          {renderFilterGrid('FEEL', feelOptions, feel, onFeelChange)}
-          {renderFilterGrid('LOOK', lookOptions, look, onLookChange)}
-          {renderFilterGrid('SIZE', mattressSizeOptions, size, onSizeChange)}
-          {renderFilterGrid('THICKNESS', thicknessOptions, thickness, onThicknessChange, 'Inches')}
-          {renderFilterGrid('TYPE', mattressTypeOptions, type, onTypeChange)}
-        </>
-      )}
+      {categoryOptions.length > 0 &&
+        renderFilterGroup(
+          activeCategory === 'bed' ? 'Mattress Type' : 'Pillow Type',
+          toOptions(categoryOptions),
+          selectedSubCategory,
+          onSubCategoryChange,
+          1
+        )}
 
-      {activeCategory === 'pillow' && (
-        <>
-          {renderFilterGrid(
-            'PILLOW CATEGORY',
-            ['All', ...PILLOW_CATEGORIES],
-            pillowCategory,
-            onPillowCategoryChange,
-            undefined,
-            1
-          )}
-          {renderFilterGrid('FIRMNESS / FEEL', feelOptions, feel, onFeelChange)}
-          {renderFilterGrid('MATERIAL / FILLING', pillowTypeOptions, type, onTypeChange)}
-        </>
-      )}
+      {materialOptions.length > 0 &&
+        renderFilterGroup(
+          'Material',
+          toOptions(materialOptions),
+          material,
+          onMaterialChange,
+          materialOptions.length > 4 ? 2 : 1
+        )}
 
-      {activeCategory === 'comforter' && (
-        <>
-          {renderFilterGrid('SIZE', comforterSizeOptions, size, onSizeChange)}
-          {renderFilterGrid('FEEL', feelOptions, feel, onFeelChange)}
-        </>
-      )}
+      {firmnessOptions.length > 0 &&
+        renderFilterGroup(
+          'Firmness',
+          toOptions(firmnessOptions),
+          firmness,
+          onFirmnessChange,
+          1
+        )}
+
+      {activeCategory === 'bed' &&
+        thicknessOptions.length > 0 &&
+        renderFilterGroup(
+          'Thickness',
+          toOptions(
+            thicknessOptions.map(String),
+            ' in'
+          ),
+          thickness,
+          onThicknessChange,
+          2
+        )}
+
+      {sizeOptions.length > 0 &&
+        renderFilterGroup(
+          'Size',
+          toOptions(sizeOptions),
+          size,
+          onSizeChange,
+          sizeOptions.some((s) => s.length > 10) ? 1 : 2
+        )}
+
+      {hasPricedProducts &&
+        renderFilterGroup(
+          'Price Range',
+          PRICE_RANGE_OPTIONS.map((opt) => ({ value: opt.id, display: opt.label })),
+          priceRange,
+          onPriceRangeChange,
+          1
+        )}
     </aside>
   );
 };
