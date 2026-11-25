@@ -1,18 +1,50 @@
 import React, { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import { BRAND_CONFIG } from '../../config/contact';
 import { WhatsAppButton } from '../common/WhatsAppButton';
 
 export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const navLinks = [
     { label: 'Home', to: '/' },
-    { label: 'Mattresses', to: '/mattresses' },
+    { label: 'Mattresses', to: '/mattresses?category=bed' },
+    { label: 'Pillows', to: '/pillows' },
+    { label: 'Comforters', to: '/mattresses?category=comforter' },
     { label: 'About Us', to: '/about' },
     { label: 'Contact', to: '/contact' },
   ];
+
+  const isLinkActive = (to: string): boolean => {
+    const searchParams = new URLSearchParams(location.search);
+    const categoryParam = searchParams.get('category');
+
+    if (to === '/') {
+      return location.pathname === '/';
+    }
+    if (to === '/mattresses?category=bed') {
+      return (
+        (location.pathname === '/mattresses' && (!categoryParam || categoryParam === 'bed')) ||
+        location.pathname.startsWith('/mattresses/')
+      );
+    }
+    if (to === '/pillows') {
+      return (
+        location.pathname === '/pillows' ||
+        location.pathname.startsWith('/pillows/') ||
+        (location.pathname === '/mattresses' && categoryParam === 'pillow')
+      );
+    }
+    if (to === '/mattresses?category=comforter') {
+      return (
+        (location.pathname === '/mattresses' && categoryParam === 'comforter') ||
+        location.pathname.startsWith('/comforters/')
+      );
+    }
+    return location.pathname === to;
+  };
 
   const closeMenu = () => setMobileMenuOpen(false);
 
@@ -22,7 +54,7 @@ export const Navbar: React.FC = () => {
       <div className="bg-[#242220] text-[#D8CEBE] text-[11px] py-1.5 px-4 tracking-wider uppercase">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <p className="hidden sm:block">
-            {BRAND_CONFIG.tagline} Direct Manufacturer Enquiries & Custom Dimensions
+            {BRAND_CONFIG.tagline} Direct Manufacturer Enquiries &amp; Custom Dimensions
           </p>
           <p className="sm:hidden mx-auto">
             {BRAND_CONFIG.tagline}
@@ -42,7 +74,6 @@ export const Navbar: React.FC = () => {
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
           {/* Brand Logo: Clean text-based COMFYSCAPE */}
           <Link
             to="/"
@@ -59,22 +90,22 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-8" aria-label="Main Navigation">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                className={({ isActive }) =>
-                  `text-sm font-medium tracking-wide transition-colors py-1 relative ${
-                    isActive
+            {navLinks.map((link) => {
+              const active = isLinkActive(link.to);
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`text-sm font-medium tracking-wide transition-colors py-1 relative ${
+                    active
                       ? 'text-[#1F1C18] font-semibold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#8C7456]'
                       : 'text-[#615A52] hover:text-[#1F1C18]'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Action Button: WhatsApp enquiry */}
@@ -108,25 +139,25 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile dropdown menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#EAE3D8] bg-[#FAF8F5] px-4 pt-4 pb-6 space-y-3 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="md:hidden border-t border-[#EAE3D8] bg-[#FAF8F5] px-4 pt-4 pb-6 space-y-3">
           <nav className="flex flex-col space-y-2">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                end={link.to === '/'}
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  `px-3 py-2.5 text-base font-medium rounded-md transition-colors ${
-                    isActive
+            {navLinks.map((link) => {
+              const active = isLinkActive(link.to);
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={closeMenu}
+                  className={`px-3 py-2.5 text-base font-medium rounded-md transition-colors ${
+                    active
                       ? 'text-[#1F1C18] bg-[#EFE8DF] font-semibold'
                       : 'text-[#575047] hover:bg-[#F3EDE4] hover:text-[#1F1C18]'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="pt-4 border-t border-[#EAE3D8] space-y-3">

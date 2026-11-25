@@ -9,13 +9,13 @@ export const BRAND_CONFIG = {
   subtitle: 'Handcrafted mattresses designed for restorative, spine-aligning comfort.',
   foundedYear: 2021,
 
-  // Contact details (Placeholder values as per project specs)
+  // Contact details
   contact: {
     // Phone number in international format for WhatsApp wa.me (digits only, with country code, no + or dashes)
-    whatsappRawNumber: '15552345678',
-    whatsappFormatted: '+1 (555) 234-5678',
-    phoneFormatted: '+1 (555) 234-5678',
-    phoneTelLink: 'tel:+15552345678',
+    whatsappRawNumber: '919310008171',
+    whatsappFormatted: '+91 93100 08171',
+    phoneFormatted: '+91 93100 08171',
+    phoneTelLink: 'tel:+919310008171',
     email: 'enquiry@comfyscape.com',
     address: {
       line1: 'Comfyscape Studio & Experience Lounge',

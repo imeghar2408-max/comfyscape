@@ -21,7 +21,6 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <div className="flex flex-col min-h-screen bg-[#FAF8F5] text-[#242220]">
-        
         {/* Site Header */}
         <Navbar />
 
@@ -29,8 +28,11 @@ export default function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/mattresses" element={<CataloguePage />} />
+            <Route path="/mattresses" element={<CataloguePage defaultCategory="bed" />} />
             <Route path="/mattresses/:slug" element={<ProductDetailPage />} />
+            <Route path="/pillows" element={<CataloguePage defaultCategory="pillow" />} />
+            <Route path="/pillows/:slug" element={<ProductDetailPage />} />
+            <Route path="/comforters/:slug" element={<ProductDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="*" element={<NotFoundPage />} />
@@ -45,7 +47,6 @@ export default function App() {
           variant="floating"
           title="Direct WhatsApp Consultation"
         />
-
       </div>
     </BrowserRouter>
   );

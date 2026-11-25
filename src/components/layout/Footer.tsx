@@ -77,31 +77,25 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Col 3: Popular Categories */}
+          {/* Col 3: Sleep Categories */}
           <div>
-            <h4 className="font-serif text-lg text-white mb-4">Mattress Types</h4>
+            <h4 className="font-serif text-lg text-white mb-4">Sleep Categories</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/mattresses?category=foam" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
-                  <span>High-Resilience Foam</span>
+                <Link to="/mattresses?category=bed" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
+                  <span>Mattresses</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#6D6357] group-hover:text-white transition-colors" />
                 </Link>
               </li>
               <li>
-                <Link to="/mattresses?category=rebonded" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
-                  <span>Orthopedic Rebonded</span>
+                <Link to="/pillows" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
+                  <span>Pillows</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#6D6357] group-hover:text-white transition-colors" />
                 </Link>
               </li>
               <li>
-                <Link to="/mattresses?category=coir" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
-                  <span>Natural Coir</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#6D6357] group-hover:text-white transition-colors" />
-                </Link>
-              </li>
-              <li>
-                <Link to="/mattresses?category=memory-foam" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
-                  <span>Cloud Memory Foam</span>
+                <Link to="/mattresses?category=comforter" className="text-[#BDB2A3] hover:text-white transition-colors flex items-center justify-between group">
+                  <span>Comforters</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-[#6D6357] group-hover:text-white transition-colors" />
                 </Link>
               </li>

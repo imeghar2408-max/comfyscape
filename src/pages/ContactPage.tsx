@@ -12,7 +12,7 @@ import {
   Sparkles 
 } from 'lucide-react';
 import { BRAND_CONFIG } from '../config/contact';
-import { MATTRESSES } from '../data/mattresses';
+import { PRODUCTS } from '../data/products';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { WhatsAppButton } from '../components/common/WhatsAppButton';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
@@ -23,7 +23,7 @@ export const ContactPage: React.FC = () => {
     fullName: '',
     phone: '',
     email: '',
-    mattressModel: MATTRESSES[0]?.name || '',
+    mattressModel: PRODUCTS[0]?.name || '',
     sizePreference: 'Queen (78" × 60")',
     thickness: '6 Inches',
     message: '',
@@ -292,9 +292,9 @@ export const ContactPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, mattressModel: e.target.value })}
                       className="w-full px-3 py-2.5 text-xs bg-[#FAF8F5] border border-[#E0D7CB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C7456]"
                     >
-                      {MATTRESSES.map((m) => (
+                      {PRODUCTS.map((m) => (
                         <option key={m.id} value={m.name}>
-                          {m.name}
+                          {m.name} ({m.category.toUpperCase()})
                         </option>
                       ))}
                       <option value="Custom Requirement">Other / Custom Concept</option>
